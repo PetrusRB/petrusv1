@@ -138,6 +138,5 @@ const HomeHero = () => {
     </div>
   );
 };
-HomeHero.displayName = 'HomeHero'
 
-export default HomeHero;
+export {HomeHero};
