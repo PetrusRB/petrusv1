@@ -1,7 +1,8 @@
+'use client'
 import { motion } from 'framer-motion';
 import HomeHero from '@/components/ui/homehero';
 
-export default function Index() {
+const HomePage = () => {
   return (
     <div className="flex min-h-screen justify-center items-center px-4 bg-gradient-to-b from-[#F8FAFC] to-[#E2E8F0]">
       <motion.div
@@ -19,3 +20,5 @@ export default function Index() {
     </div>
   );
 };
+
+export default HomePage
