@@ -66,6 +66,8 @@ const Button = memo(({ icon, href, clickType, label, highlight, mobile = false, 
 });
 
 // Main hero component with bot info and features section
+
+/* eslint-disable react/display-name */
 const HomeHero = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#F8FAFC] p-5">
