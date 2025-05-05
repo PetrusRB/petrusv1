@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image';
 import { useCallback, memo } from 'react';
 import { useRouter } from 'next/router';
