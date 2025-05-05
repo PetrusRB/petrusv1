@@ -2,7 +2,10 @@
   "name": "@peterrb/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "run:web": "yarn nx run petrus:dev",
+    "run:bot": "cd apps/bot && yarn run dev"
+  },
   "private": true,
   "dependencies": {
     "expo": "~52.0.11",

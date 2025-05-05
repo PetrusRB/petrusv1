@@ -1,82 +1,54 @@
-# Peterrb
+# Petrus 🤖
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+**Petrus** é um bot multifuncional para Discord, projetado para elevar a experiência da sua comunidade! Com funcionalidades de **música**, **moderação**, **entretenimento** e **sistema de ranks**, ele é a escolha ideal para animar, organizar e engajar seus servidores.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+[![Discord](https://img.shields.io/discord/123456789?label=Suporte%20no%20Discord&style=flat-square)](https://discord.gg/seu-link)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/next?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## ✨ Funcionalidades
 
-## Finish your remote caching setup
+- **🎵 Música**: Toque músicas, crie playlists e controle a vibe do seu servidor com comandos simples.
+- **🛡️ Moderação**: Mantenha a ordem com ferramentas de ban, kick, mute e gestão de mensagens.
+- **🎉 Entretenimento**: Jogos, memes, comandos divertidos e interações para animar sua comunidade.
+- **🏆 Sistema de Ranks**: Recompense a participação com um sistema de níveis e ranks personalizáveis.
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/3D9vgfWjve)
+## 📱 Plataformas Suportadas
 
+- ✅ **Android**: Integração via app Discord.
+- ✅ **iOS**: Suporte total no aplicativo Discord.
+- ✅ **Web**: Funciona perfeitamente no navegador.
 
-## Run tasks
+## 🛠️ Tecnologias Utilizadas
 
-To run the dev server for your app, use:
+Petrus foi construído com tecnologias modernas para garantir desempenho e escalabilidade:
 
-```sh
-npx nx dev petrus
-```
+<p align="left">
+  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript" width="40" height="40"/>
+  </a>
+  <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="TypeScript" width="40" height="40"/>
+  </a>
+  <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="MongoDB" width="40" height="40"/>
+  </a>
+  <a href="https://reactjs.org/" target="_blank" rel="noreferrer">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="React" width="40" height="40"/>
+  </a>
+  <a href="https://reactnative.dev/" target="_blank" rel="noreferrer">
+    <img src="https://reactnative.dev/img/header_logo.svg" alt="React Native" width="40" height="40"/>
+  </a>
+</p>
 
-To create a production bundle:
+## 🚀 Como Começar
 
-```sh
-npx nx build petrus
-```
+1. **Convide o Bot**: Adicione o Petrus ao seu servidor Discord [clicando aqui](https://discord.com/oauth2/authorize?client_id=1220409917282713650&permissions=1103034313814&integration_type=0&scope=bot).
+2. **Configuração**: Use o comando `/ajuda` para explorar todos os recursos e personalizar o bot.
 
-To see all available targets to run for a project, run:
+## 📜 Licença
 
-```sh
-npx nx show project petrus
-```
+Este projeto está licenciado sob a [MIT License](LICENSE).
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+---
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/next:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/react:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/next?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Feito com 💜 pela comunidade para a comunidade!
