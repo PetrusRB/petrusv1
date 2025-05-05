@@ -1,0 +1,4 @@
+image: docker build --pull --rm -f Dockerfile -t hexgano/petrus .
+
+run: docker run -d --name petrus hexgano/petrus
+

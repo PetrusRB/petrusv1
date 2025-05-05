@@ -1,0 +1,49 @@
+{
+  "emojis": {
+    "static": {
+      "moderador": "<:moderator:1365116372903919666>",
+      "hammer": "<:hammer:1365116397864226846>",
+      "success": "<:success:1365130432429166623>",
+      "failed": "<:failed:1365130452322619474>",
+      "member": "<:membro:1365132829847195701>",
+      "rules": "<:rules:1365117361237135462>",
+      "bot": "<:bot:1365135026550734940>",
+      "reason": "<:reason:1366221089231077397>",
+      "slash": "<:slash:1366630177953681439>",
+      "check": "<:check:1366630384296661133>",
+      "cross": "<:cross:1366630422968143933>",
+      "yes": "<:yes:1366630335839993916>",
+      "no": "<:no:1366630469893881896>",
+      "mcname": "<:mcname:1366960795832942683>",
+      "bedrock": "<:bedrock:1366960985474072596>",
+      "refresh": "<:refresh:1366965417444114433>",
+      "search": "<:search:1366965394232967271>"
+    },
+    "anim": {
+      "clean": "<a:clean:1365123193018515547>",
+      "cube": "<a:cube:1366547788376309914>",
+      "banido": "<a:banido:1365130408382959656>",
+      "manopla": "<a:manopla:1365124324893261894>",
+      "orb": "<a:orb:1366965360036806797>",
+      "loading": "<a:loading:1365105903895842978>"
+    }
+  },
+  "colors": {
+    "default": "#2B2D31",
+    "primary": "#3b82f6",
+    "secondary": "#4f545c",
+    "success": "#22c55e",
+    "danger": "#ED4245",
+    "warning": "#fbbd23",
+    "azoxo": "#5865F2",
+    "green": "#57F287",
+    "yellow": "#FEE75C",
+    "fuchsia": "#EB459E",
+    "magic": "#c026d3",
+    "developer": "#3e70dd",
+    "balance": "#45ddc0",
+    "brilliance": "#f07d5f",
+    "nitro": "#ff6bfa",
+    "bravery": "#9c84ef"
+  }
+}
