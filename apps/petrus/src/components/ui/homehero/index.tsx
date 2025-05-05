@@ -138,5 +138,5 @@ const HomeHero = () => {
     </div>
   );
 };
-
+HomeHero.displayName = "HomeHeroUI"
 export {HomeHero};
