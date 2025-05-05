@@ -5,17 +5,21 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "expo": "~52.0.11",
     "next": "~15.2.4",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "react-native": "0.76.3"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^2.1.1",
     "@eslint/js": "^9.8.0",
+    "@expo/cli": "~0.21.8",
     "@next/eslint-plugin-next": "^15.2.4",
     "@nx/eslint": "21.0.0",
     "@nx/eslint-plugin": "21.0.0",
+    "@nx/expo": "21.0.0",
     "@nx/js": "21.0.0",
     "@nx/next": "21.0.0",
     "@nx/workspace": "21.0.0",
