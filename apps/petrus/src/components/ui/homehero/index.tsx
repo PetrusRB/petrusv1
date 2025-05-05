@@ -123,8 +123,7 @@ const HomeHero = () => {
           label='Dashboard' 
           icon={<ArrowRight className="text-white" size={20} />} 
           currentPath='/' 
-          clickType={ClickType.REDIRECT} 
-          href={process.env.NEXT_PUBLIC_INVITE_LINK} 
+          clickType={ClickType.OTHER}
         />
       </div>
 
@@ -139,5 +138,6 @@ const HomeHero = () => {
     </div>
   );
 };
+HomeHero.displayName = "HomeHero"
 
 export default HomeHero;
