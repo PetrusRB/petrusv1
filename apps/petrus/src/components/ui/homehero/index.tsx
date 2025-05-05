@@ -138,6 +138,6 @@ const HomeHero = () => {
     </div>
   );
 };
-HomeHero.displayName = "HomeHero"
+HomeHero.displayName = 'HomeHero'
 
 export default HomeHero;
