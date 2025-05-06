@@ -1,4 +1,6 @@
+import Header from '@/components/ui/header/navbar';
 import './global.css';
+import Provider from '@/providers/Provider';
 
 export const metadata = {
   title: 'Petrus ',
@@ -11,8 +13,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html suppressHydrationWarning lang="pt-BR" data-theme="dark">
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <body>
+        <Header />
+        <Provider>
+          {children}
+        </Provider>
+      </body>
     </html>
   );
 }

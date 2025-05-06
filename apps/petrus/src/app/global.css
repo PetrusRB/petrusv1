@@ -1,7 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@plugin "daisyui";
+
+/* UI Frameworks */
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+@plugin "@iconify/tailwind4";
+@plugin "flyonui";
+@source "./node_modules/flyonui/dist/index.js";
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -12,8 +19,57 @@ html {
   tab-size: 4;
   scroll-behavior: smooth;
 }
+
+:root {
+  --background: white;
+  --foreground: #1F2937;
+  --bg-btn: #fdc719;
+  --btn-color: #000000;
+}
+
 body {
   font-family: inherit;
   line-height: inherit;
   margin: 0;
+}
+
+/* Themes */
+[data-theme='dark'] {
+  --background: #1F2937;
+  --foreground: white;
+}
+
+.light {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+/* Checkbox */
+#checkbox:checked~.btn-change::before {
+  transition: 0.3s;
+  transform: translateX(23px);
+}
+
+.btn-change {
+  background-color: var(--bg-btn);
+}
+
+.btn-change::before {
+  content: '';
+  display: block;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: var(--btn-color);
+  transition: 0.3s;
+  transform: translateX(0);
 }

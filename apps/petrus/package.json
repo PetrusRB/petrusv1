@@ -2,6 +2,9 @@
   "name": "@peterrb/petrus",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "dev": "next dev"
+  },
   "nx": {
     "name": "petrus"
   },

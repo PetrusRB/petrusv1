@@ -1,11 +1,17 @@
-const BotIcon = () => {
+"use client"
+import { useTheme } from "next-themes";
+import { memo } from "react";
+
+const BotIcon = memo(() => {
+    const { theme } = useTheme()
+
     return (
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
             width="16.000000pt" height="16.000000pt" viewBox="0 0 48.000000 48.000000"
             preserveAspectRatio="xMidYMid meet">
 
             <g transform="translate(0.000000,48.000000) scale(0.100000,-0.100000)"
-                fill="#ffffff" stroke="none">
+                fill={theme === "dark" ? "#fff" : "#000"} stroke="none">
                 <path d="M212 448 c-17 -17 -15 -63 3 -78 8 -7 15 -21 15 -31 0 -16 -8 -19
     -53 -19 -43 0 -58 -5 -75 -23 -12 -13 -22 -33 -22 -45 0 -17 -6 -22 -25 -22
     -26 0 -26 -1 -23 -67 3 -61 5 -68 25 -71 16 -2 23 -11 25 -35 l3 -32 155 0
@@ -28,5 +34,6 @@ const BotIcon = () => {
             </g>
         </svg>
     )
-}
+})
+BotIcon.displayName = 'BotIcon';
 export default BotIcon;

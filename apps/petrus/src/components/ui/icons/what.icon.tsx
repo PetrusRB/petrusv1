@@ -1,11 +1,16 @@
-const WhatIcon = () => {
+"use client"
+import { useTheme } from "next-themes";
+import { memo } from "react";
+
+const WhatIcon = memo(() => {
+    const { theme } = useTheme();
     return (
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
             width="15pt" height="15pt" viewBox="0 0 50.000000 50.000000"
             preserveAspectRatio="xMidYMid meet">
 
             <g transform="translate(0.000000,50.000000) scale(0.100000,-0.100000)"
-                fill="#ffffff" stroke="none">
+                fill={theme === "dark" ? "#fff" : "#000"} stroke="none">
                 <path d="M182 480 c-66 -40 -96 -135 -43 -135 19 0 27 7 33 32 16 63 88 83
 133 38 36 -35 33 -79 -6 -116 -17 -16 -34 -29 -38 -29 -20 0 -42 -67 -39 -115
 3 -46 5 -50 28 -50 23 0 25 5 30 53 5 48 10 57 47 88 24 19 47 50 53 70 40
@@ -19,5 +24,6 @@ const WhatIcon = () => {
             </g>
         </svg>
     )
-}
+})
+WhatIcon.displayName = 'WhatIcon';
 export default WhatIcon;
