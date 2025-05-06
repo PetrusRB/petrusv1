@@ -10,6 +10,7 @@ export default [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
+      'react/display-name': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {
