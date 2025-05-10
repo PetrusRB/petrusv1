@@ -11,6 +11,7 @@ export default [
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
       'react/display-name': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {

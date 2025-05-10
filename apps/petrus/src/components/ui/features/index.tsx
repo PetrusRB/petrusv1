@@ -44,7 +44,6 @@ const features: Feature[] = [
 // Custom hook to detect mobile screens
 const useIsMobile = (): boolean => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -53,7 +52,6 @@ const useIsMobile = (): boolean => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
   return isMobile;
 };
 
@@ -72,7 +70,9 @@ const FeatureCard = memo(({ item, isLast, isMobile }: FeatureCardProps) => (
     className={`flex flex-col items-center justify-center p-6 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ${
       isMobile ? 'w-full mb-6' : 'w-[280px] mx-2 mb-6'
     }`}
-    onClick={() => {}}
+    onClick={() => {
+      console.log(`Feature clicked: ${item.title}`);
+    }}
     aria-label={`Feature: ${item.title}`}
   >
     <motion.div
@@ -82,11 +82,11 @@ const FeatureCard = memo(({ item, isLast, isMobile }: FeatureCardProps) => (
     >
       {item.icon}
     </motion.div>
-    <h3 className="text-xl font-bold  mb-3 text-center">{item.title}</h3>
-    <p className="text-sm  text-center leading-6">{item.description}</p>
+    <h3 className="text-xl font-bold mb-3 text-center">{item.title}</h3>
+    <p className="text-sm text-center leading-6">{item.description}</p>
     {!isLast && (
       <div
-        className={isMobile ? 'w-3/4 h-[1px]' : 'w-[1px] h-2/3  mx-4 self-center'}
+        className={isMobile ? 'w-3/4 h-[1px]' : 'w-[1px] h-2/3 mx-4 self-center'}
       />
     )}
   </motion.button>
@@ -95,7 +95,6 @@ const FeatureCard = memo(({ item, isLast, isMobile }: FeatureCardProps) => (
 // Features section component
 const Features = () => {
   const isMobile = useIsMobile();
-
   const renderFeature = useCallback(
     (item: Feature, index: number) => (
       <FeatureCard
