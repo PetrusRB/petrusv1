@@ -70,9 +70,6 @@ const FeatureCard = memo(({ item, isLast, isMobile }: FeatureCardProps) => (
     className={`flex flex-col items-center justify-center p-6 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ${
       isMobile ? 'w-full mb-6' : 'w-[280px] mx-2 mb-6'
     }`}
-    onClick={() => {
-      console.log(`Feature clicked: ${item.title}`);
-    }}
     aria-label={`Feature: ${item.title}`}
   >
     <motion.div

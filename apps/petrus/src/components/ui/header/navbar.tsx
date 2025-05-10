@@ -31,6 +31,7 @@ const NAV_ITEMS: ReadonlyArray<NavItemProps> = [
   { label: "Login", href: "/login", highlight: true, icon: <DiscordIcon /> },
 ] as const;
 
+
 /**
  * Função debounce tipada e otimizada
  * @template T
@@ -47,11 +48,9 @@ function debounce<T extends (...args: any[]) => any>(
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
   return function (this: any, ...args: Parameters<T>): void {
-    const context = this;
-
     const later = () => {
       timeoutId = undefined;
-      if (!immediate) func.apply(context, args);
+      if (!immediate) func.apply(this, args);
     };
 
     const callNow = immediate && !timeoutId;
@@ -62,7 +61,7 @@ function debounce<T extends (...args: any[]) => any>(
 
     timeoutId = setTimeout(later, delay);
 
-    if (callNow) func.apply(context, args);
+    if (callNow) func.apply(this, args);
   };
 }
 

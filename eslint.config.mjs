@@ -13,6 +13,7 @@ export default [
       'react/display-name': 'off',
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
+      '@typescript-eslint/no-this-alias': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {
