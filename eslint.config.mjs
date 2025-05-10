@@ -12,6 +12,7 @@ export default [
     rules: {
       'react/display-name': 'off',
       '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-inferrable-types': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {

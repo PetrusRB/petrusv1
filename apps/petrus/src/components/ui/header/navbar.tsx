@@ -42,7 +42,7 @@ const NAV_ITEMS: ReadonlyArray<NavItemProps> = [
 function debounce<T extends (...args: any[]) => any>(
   func: T,
   delay: number,
-  immediate: boolean = false
+  immediate = false
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
@@ -108,8 +108,8 @@ NavLink.displayName = 'NavLink';
 
 // Componente principal da Navbar com otimizações
 const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const currentPath = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
