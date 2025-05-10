@@ -13,7 +13,6 @@ export const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState<boolean>(
     typeof width === 'number' ? width < BREAKPOINTS.mobile : true // Fallback to mobile for SSR
   );
-
   useEffect(() => {
     // Update isMobile based on window width
     const updateIsMobile = () => {
@@ -38,6 +37,7 @@ export const useIsMobile = () => {
     } else {
       // React Native: Use useWindowDimensions directly
       setIsMobile(width < BREAKPOINTS.mobile);
+      return undefined;
     }
   }, [width]);
 
