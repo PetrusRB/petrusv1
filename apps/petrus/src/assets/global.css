@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 /* UI Frameworks */
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
-}
 @plugin "@iconify/tailwind4";
 @plugin "flyonui";
 @source "./node_modules/flyonui/dist/index.js";

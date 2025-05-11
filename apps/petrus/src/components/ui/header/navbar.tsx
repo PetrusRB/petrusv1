@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu as Bars3Icon, X as XMarkIcon } from "lucide-react";
 import { BotIcon, WhatIcon, DiscordIcon } from "../icons";
+import { Button, ButtonAction, ButtonVariant } from "../button/Button";
 
 // Interfaces para tipar os componentes
 interface NavItemProps {
@@ -27,7 +28,7 @@ interface NavLinkProps {
 // Items de navegação definidos como constante fora do componente
 const NAV_ITEMS: ReadonlyArray<NavItemProps> = [
   { label: "Invite", href: "/invite", icon: <BotIcon /> },
-  { label: "About", href: "/about", icon: <WhatIcon /> },
+  { label: "Commands", href: "/commands", icon: <WhatIcon /> },
   { label: "Login", href: "/login", highlight: true, icon: <DiscordIcon /> },
 ] as const;
 
@@ -67,39 +68,15 @@ function debounce<T extends (...args: any[]) => any>(
 
 // Componente NavLink com memoização para evitar re-renders desnecessários
 const NavLink: React.FC<NavLinkProps> = memo(({ item, mobile = false, onPress, children, isTransparent, currentPath }) => {
-  const isActive = currentPath === item.href;
-
-  // Classes geradas apenas uma vez usando useMemo
-  const linkClasses = useMemo(() => {
-    return `
-      transition-colors rounded-xl flex flex-row items-center justify-center
-      ${mobile ? "py-3 px-4 w-full" : "py-2 px-4"}
-      ${isActive && !isTransparent ? "bg-zinc-700/50" : `${isTransparent ? "" : "hover:bg-zinc-800/50 active:bg-zinc-700/30"}`}
-      ${item.highlight
-        ? (mobile
-          ? "bg-indigo-600 active:bg-indigo-700"
-          : "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800")
-        : ""}
-    `;
-  }, [isActive, item.highlight, mobile]);
-
-  const textClasses = useMemo(() => {
-    return `${isActive ? "font-medium" : "font-normal"} ${mobile ? "text-base" : ""}`;
-  }, [isActive, mobile]);
-
   return (
-    <Link
+    <Button
+      label={item.label}
       href={item.href || "/"}
-      onClick={onPress}
-      className={linkClasses}
-      prefetch={false}
-    >
-      {item.icon && <span className="mr-2">{item.icon}</span>}
-      <span className={textClasses}>
-        {item.label}
-        {children}
-      </span>
-    </Link>
+      variant={ButtonVariant.GHOST}
+      icon={item.icon}
+      currentPath={currentPath}
+      action={ButtonAction.NAVIGATE}
+    />
   );
 });
 

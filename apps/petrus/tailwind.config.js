@@ -1,13 +1,21 @@
-/** @type {import('tailwindcss').Config} */
+const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
+const { join } = require('path');
+const daisyUI = require("daisyui")
+
 module.exports = {
-  darkMode: "selector",
+  darkMode: 'selector',
   content: [
-    './{src,pages,components,app}/**/*.{ts,tsx,js,jsx,html}',
-    '!./{src,pages,components,app}/**/*.{stories,spec}.{ts,tsx,js,jsx,html}',
-    //     ...createGlobPatternsForDependencies(__dirname)
+    join(
+      __dirname,
+      '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
+    ),
+    ...createGlobPatternsForDependencies(__dirname),
   ],
+  daisyui: {
+    themes: ["light", "night", "acid"],
+  },
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [daisyUI],
 };
