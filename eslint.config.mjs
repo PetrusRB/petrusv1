@@ -14,6 +14,7 @@ export default [
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
       '@typescript-eslint/no-this-alias': 'off',
+      'react/no-unescaped-entities': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {
