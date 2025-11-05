@@ -1,32 +1,40 @@
-// ThemeToggle.tsx
-'use client';
-
+import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button/Button';
 
-export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+export const ThemeToggle = () => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
-  const handle = () => {
-    if (!theme) return;
-    setTheme(theme === "night" ? "light" : "night")
-  }
   useEffect(() => {
-    setMounted(true);
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+    setTheme(initialTheme);
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  };
 
   return (
-    <div className="btn-status">
-      <input type="checkbox" onClick={handle} name="checkbox" id="checkbox" className="hidden" />
-      <label
-        htmlFor="checkbox"
-        className="btn-change flex items-center p-1 rounded-lg w-12 h-6 cursor-pointer"
-      ></label>
-    </div>
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={toggleTheme}
+      className="rounded-full w-10 h-10"
+      aria-label="Toggle theme"
+    >
+      {theme === 'light' ? (
+        <Moon className="h-5 w-5" />
+      ) : (
+        <Sun className="h-5 w-5" />
+      )}
+    </Button>
   );
-}
+};
+

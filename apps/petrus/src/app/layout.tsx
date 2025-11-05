@@ -8,6 +8,7 @@ export const metadata = {
   description: 'A discord bot.',
 };
 
+
 export default async function RootLayout({
   children,
 }: {
@@ -20,6 +21,9 @@ export default async function RootLayout({
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <body>
         <Header />
+        {/* Espaço para compensar a navbar fixa */}
+        <div className="h-[88px]" aria-hidden="true" />
+
         <Provider>
           {children}
         </Provider>

@@ -2,6 +2,28 @@ import { createCommand } from "#base";
 import { settings } from "#settings";
 import { ApplicationCommandType, PermissionFlagsBits } from "discord.js";
 import { db } from "#database";
+import { z } from 'zod'
+const allowedCategories = {
+    cargos: ["mutado", "membro", "naoverificado"],
+};
+
+// schema
+const configSchema = z
+    .object({
+        category: z.enum(Object.keys(allowedCategories) as [keyof typeof allowedCategories]),
+        key: z.string(),
+        value: z.string().min(1, "O valor não pode ser vazio.").max(256, "Valor muito longo."),
+    })
+    .superRefine((data, ctx) => {
+        const allowedKeys = allowedCategories[data.category];
+        if (!allowedKeys || !allowedKeys.includes(data.key)) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Chave inválida para a categoria ${data.category}. Chaves válidas: ${allowedKeys?.join(", ")}`,
+                path: ["key"],
+            });
+        }
+    });
 
 export default createCommand({
     name: "config",
@@ -53,28 +75,27 @@ export default createCommand({
                 ephemeral: true,
             });
         }
-        const category = options.getString("category", true).trim();
-        const key = options.getString("key", true).trim();
-        const value = options.getString("value", true).trim();
+        const categoryOption = options.getString("category", true).trim();
+        const keyOption = options.getString("chave", true).trim();
+        const valueOption = options.getString("valor", true).trim();
 
-        // Checar se os parâmetros são válidos
-        if (!category || !key || !value) {
+        const parsed = configSchema.safeParse({ categoryOption, keyOption, valueOption });
+        if (!parsed.success) {
+            const issue = parsed.error.issues[0];
             return interaction.reply({
-                content: `${settings.emojis.static.failed} Categoria, chave e valor são obrigatórios.`,
+                content: `${settings.emojis.static.failed} ${issue.message}`,
                 ephemeral: true,
             });
         }
+        const { category, key, value } = parsed.data;
 
-        const allowedCategories = {
-            cargos: ["mutado", "membro", "naoverificado"],
-        };
         // Checar se a categoria é válida
         const guildSchema = await db.guilds.findOne({});
 
         if (!guildSchema || !(category in guildSchema)) {
             return interaction.reply({
-            content: `${settings.emojis.static.failed} A categoria **${category}** não é válida.`,
-            ephemeral: true,
+                content: `${settings.emojis.static.failed} A categoria **${category}** não é válida.`,
+                ephemeral: true,
             });
         }
         // Checar se a chave é válida

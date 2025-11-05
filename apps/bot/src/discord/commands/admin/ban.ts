@@ -1,7 +1,15 @@
 import { createCommand } from "#base";
 import { settings } from "#settings";
 import { createEmbed, createEmbedAuthor } from "@magicyan/discord";
-import { ApplicationCommandOptionType, ApplicationCommandType, PermissionFlagsBits } from "discord.js";
+import { warn } from "console";
+import { ApplicationCommandOptionType, ApplicationCommandType, PermissionFlagsBits, User } from "discord.js";
+import { z } from 'zod'
+const schema = z.object({
+    alvo: z.custom<User>((val) => val instanceof User, {
+        message: "Usuário inválido.",
+    }),
+    motivo: z.string()
+});
 
 export default createCommand({
     name: "ban",
@@ -24,9 +32,10 @@ export default createCommand({
     async run(interaction) {
         const { guild, user, options } = interaction;
         const botMe = guild?.members.me;
-        await interaction.reply({ content: `${settings.emojis.anim.loading} Verificando Possibilidades de banimento...`, fetchReply: true, ephemeral: true });
+        await interaction.deferReply({ ephemeral: true });
+
         if (!botMe?.permissions.has(PermissionFlagsBits.BanMembers)) {
-            interaction.reply({ content: '❌ Sem permissão para banir usuários!', ephemeral: true });
+            interaction.editReply({ content: '❌ Sem permissão para banir usuários!' });
             return;
         }
         if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator) &&
@@ -35,15 +44,17 @@ export default createCommand({
             interaction.editReply({ content: `${settings.emojis.static.failed} Você não tem permissão para usar este comando.` });
             return;
         }
-        const alvo = options.getUser('alvo');
-        const motivo = options.getString('motivo') || "Motivo nenhum.";
-        if (alvo === null) {
-            interaction.reply({
+
+        const target = options.getUser('alvo');
+        const reason = options.getString("motivo");
+        const parsed = schema.safeParse({ alvo: target, motivo: reason });
+        if (!parsed.success) {
+            interaction.editReply({
                 content: `${settings.emojis.static.failed} Por favor, especifique os parametros corretamente (alvo, motivo).`,
-                ephemeral: true
             });
             return;
         }
+        const { alvo, motivo } = parsed.data;
         const targetMember = guild.members.cache.get(alvo.id);
         const botMember = guild.members.me;
         if (!targetMember) { interaction.editReply({ content: `${settings.emojis.static.failed} Alvo provavelmente não existe.` }); return; }
@@ -51,16 +62,14 @@ export default createCommand({
         if (targetMember.id === user?.id) { interaction.editReply({ content: `${settings.emojis.static.failed} Você não pode banir você mesmo.` }); return; }
         if (targetMember.id === botMe?.id) { interaction.editReply({ content: `${settings.emojis.static.failed} Eu não posso me banir.` }); return; }
         if (targetMember.roles.highest.position >= botMe?.roles.highest.position) {
-            interaction.reply({
+            interaction.editReply({
                 content: `${settings.emojis.static.failed} Não posso banir este membro, pois ele tem um cargo mais alto ou igual ao meu.`,
-                ephemeral: true,
             });
             return;
         }
         if (!botMember || !botMember.roles.highest) {
-            interaction.reply({
+            interaction.editReply({
                 content: `${settings.emojis.static.failed} Meu cargo não é alto suficiente.`,
-                ephemeral: true,
             });
             return;
         }

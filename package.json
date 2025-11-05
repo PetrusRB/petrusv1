@@ -8,6 +8,9 @@
   },
   "private": true,
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tanstack/react-query": "^5.90.6",
+    "class-variance-authority": "^0.7.1",
     "cookie": "^1.0.2",
     "css-loader": "^7.1.2",
     "dotenv": "16.5.0",
@@ -15,14 +18,19 @@
     "flyonui": "2.1.0",
     "framer-motion": "12.9.7",
     "jotai": "^2.12.4",
+    "ky": "^1.13.0",
     "lucide-react": "0.507.0",
     "next": "~15.2.4",
     "next-themes": "1.0.0-beta.0",
+    "noblox.js": "^6.2.0",
+    "pino": "^10.1.0",
     "postcss-loader": "^8.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.76.3",
-    "styled-components": "6.1.17"
+    "styled-components": "6.1.17",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.1.12"
   },
   "resolutions": {
     "styled-components": "^5",
@@ -50,7 +58,6 @@
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
     "autoprefixer": "10.4.13",
-    "daisyui": "4.12.24",
     "eslint": "^9.8.0",
     "eslint-config-next": "^15.2.4",
     "eslint-config-prettier": "^10.0.0",

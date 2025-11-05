@@ -6,13 +6,11 @@ type HeroProps = {
 }
 
 /* eslint-disable react/display-name */
-const Hero: React.FC<HeroProps> = ({children}) => {
+const Hero: React.FC<HeroProps> = ({ children }) => {
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8">
-        {children}
-      </div>
-    </div>
+    <section className="flex flex-col items-center justify-center w-full">
+      {children}
+    </section>
   );
 };
 Hero.displayName = "HomeHeroUI"

@@ -17,6 +17,18 @@ html {
   scroll-behavior: smooth;
 }
 
+::selection {
+  background: #fbe72b;
+  /* Azul */
+  color: #000;
+  /* Texto branco */
+}
+
+::-moz-selection {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
 :root {
   --background: white;
   --foreground: #1F2937;

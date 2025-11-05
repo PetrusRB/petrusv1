@@ -1,121 +1,104 @@
-import { useCallback, useEffect, useState, memo } from 'react';
 import { motion } from 'framer-motion';
+import { Shield, Music, Smile, Zap, Users, Settings, Search, Bitcoin, Bot } from 'lucide-react';
 
-// Feature data interface
-interface Feature {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-}
-
-// Feature data
-const features: Feature[] = [
+const features = [
   {
-    id: '1',
+    icon: Shield,
     title: 'Moderação Avançada',
-    description:
-      'Controle seu servidor com ferramentas poderosas: banimentos, silenciamentos e avisos personalizáveis.',
-    icon: '🛡️',
+    description: 'Proteja seu servidor com sistema anti-spam, logs detalhados e comandos de moderação.',
   },
   {
-    id: '2',
-    title: 'Música Premium',
-    description:
-      'Toque playlists do Spotify, YouTube e mais, com áudio cristalino e controles intuitivos.',
-    icon: '🎧',
+    icon: Search,
+    title: 'Pesquisa',
+    description: 'Encontre informações ou jogadores com rapidez e precisão.',
   },
   {
-    id: '3',
-    title: 'Diversão Garantida',
-    description:
-      'Envolva sua comunidade com jogos, memes e comandos interativos que todos adoram.',
-    icon: '😂',
+    icon: Music,
+    title: 'Sistema de Música',
+    description: 'Reproduza suas músicas favoritas com qualidade superior e controles intuitivos.',
   },
   {
-    id: '4',
-    title: 'Automação Inteligente',
-    description:
-      'Automatize boas-vindas, regras e tarefas repetitivas para um servidor sempre organizado.',
-    icon: '🤖',
+    icon: Bot,
+    title: 'Inteligencia Artificial',
+    description: 'LLM de última geração para conversas naturais, assistência contextual e personas personalizáveis — ideal para suporte, criação de conteúdo e experiências interativas.'
+  },
+  {
+    icon: Bitcoin,
+    title: 'Criptomoedas',
+    description: 'Exibe informações atualizadas sobre as principais criptomoedas em tempo real.'
+  },
+  {
+    icon: Smile,
+    title: 'Comandos de Diversão',
+    description: 'Anime seu servidor com memes, jogos e interações divertidas para todos.',
+  },
+  {
+    icon: Zap,
+    title: 'Resposta Rápida',
+    description: 'Comandos executados instantaneamente com 99.9% de uptime garantido.',
+  },
+  {
+    icon: Users,
+    title: 'Sistema de Níveis',
+    description: 'Sistema de XP e níveis personalizado para engajar sua comunidade.',
+  },
+  {
+    icon: Settings,
+    title: 'Configuração Fácil',
+    description: 'Configure tudo através do dashboard intuitivo sem tocar em código.',
   },
 ];
 
-// Custom hook to detect mobile screens
-const useIsMobile = (): boolean => {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  return isMobile;
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
 };
 
-// Feature card component
-interface FeatureCardProps {
-  item: Feature;
-  isLast: boolean;
-  isMobile: boolean;
-}
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
-const FeatureCard = memo(({ item, isLast, isMobile }: FeatureCardProps) => (
-  <motion.button
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: isMobile ? 0 : 0.1 * parseInt(item.id, 10) }}
-    className={`flex flex-col items-center justify-center p-6 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 ${
-      isMobile ? 'w-full mb-6' : 'w-[280px] mx-2 mb-6'
-    }`}
-    aria-label={`Feature: ${item.title}`}
-  >
-    <motion.div
-      animate={{ scale: [1, 1.2, 1] }}
-      transition={{ duration: 0.9, repeat: Infinity }}
-      className="text-5xl mb-4"
-    >
-      {item.icon}
-    </motion.div>
-    <h3 className="text-xl font-bold mb-3 text-center">{item.title}</h3>
-    <p className="text-sm text-center leading-6">{item.description}</p>
-    {!isLast && (
-      <div
-        className={isMobile ? 'w-3/4 h-[1px]' : 'w-[1px] h-2/3 mx-4 self-center'}
-      />
-    )}
-  </motion.button>
-));
-
-// Features section component
-const Features = () => {
-  const isMobile = useIsMobile();
-  const renderFeature = useCallback(
-    (item: Feature, index: number) => (
-      <FeatureCard
-        key={item.id}
-        item={item}
-        isLast={index === features.length - 1}
-        isMobile={isMobile}
-      />
-    ),
-    [isMobile]
-  );
-
+export const Features = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className={`w-full max-w-7xl px-4 py-8 flex ${
-        isMobile ? 'flex-col' : 'flex-row flex-wrap'
-      } justify-center items-center mx-auto gap-4`}
-    >
-      {features.map((item, index) => renderFeature(item, index))}
-    </motion.div>
+    <div className="w-full py-12">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4"
+      >
+        {features.map((feature, index) => {
+          const Icon = feature.icon;
+          return (
+            <motion.div
+              key={index}
+              variants={itemVariants}
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+              className="bg-card rounded-2xl p-6 border border-primary/50 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-glow)] transition-all duration-300"
+            >
+              <div className="bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                <Icon className="text-primary" size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-2 text-card-foreground">{feature.title}</h3>
+              <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+    </div>
   );
 };
 
-export default memo(Features);
