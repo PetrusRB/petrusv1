@@ -1,0 +1,31 @@
+{
+  "name": "@peterrb/papi",
+  "type": "module",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "start": "pm2 start build/index.js --name papi -i 1",
+    "stop": "pm2 stop papi",
+    "restart": "pm2 restart papi",
+    "logs": "pm2 logs papi",
+    "reset": "pm2 delete all && pm2 save"
+  },
+  "nx": {
+    "name": "papi"
+  },
+  "dependencies": {
+    "chalk": "5.4.1",
+    "fast-glob": "3.3.3",
+    "ky": "^1.8.1",
+    "mongoose": "8.3.1",
+    "rou3": "0.5.1",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.17.12",
+    "tsx": "4.8.0",
+    "typescript": "5.7.2"
+  },
+  "baseVersion": "1.2.0"
+}

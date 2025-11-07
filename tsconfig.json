@@ -4,7 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/petrus"
+      "path": "./apps/petrus",
+    },
+    {
+      "path": "./apps/papi"
     }
   ]
 }

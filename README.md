@@ -1,26 +1,30 @@
 # Petrus 🤖
 
-**Petrus** é um bot multifuncional para Discord, projetado para elevar a experiência da sua comunidade! Com funcionalidades de **música**, **moderação**, **entretenimento** e **sistema de ranks**, ele é a escolha ideal para animar, organizar e engajar seus servidores.
+<p align="right" style="float: right; margin-left: 20px; border-radius: 50%; box-shadow: 0 0 15px 3px gold;">
+  <img src="https://media.discordapp.net/attachments/1323017360269119520/1436227667719491585/letraP.png?ex=690ed6bf&is=690d853f&hm=59b3ad2dbb258abf071ed8f463d0d55244cece785240a1d1cfd02d3f001ff6b2&=&format=webp&quality=lossless&width=626&height=626" alt="Foto do Bot Petrus" width="120" height="120" style="border-radius: 50%;" />
+</p>
+
+**Petrus** é um bot multifuncional para Discord desenvolvido para aprimorar a experiência da sua comunidade. Com recursos completos de **música**, **moderação**, **entretenimento** e **sistema de ranks**, é a ferramenta ideal para dinamizar, organizar e engajar seus servidores.
 
 [![Discord](https://img.shields.io/discord/123456789?label=Suporte%20no%20Discord&style=flat-square)](https://discord.gg/seu-link)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ## ✨ Funcionalidades
 
-- **🎵 Música**: Toque músicas, crie playlists e controle a vibe do seu servidor com comandos simples.
-- **🛡️ Moderação**: Mantenha a ordem com ferramentas de ban, kick, mute e gestão de mensagens.
-- **🎉 Entretenimento**: Jogos, memes, comandos divertidos e interações para animar sua comunidade.
-- **🏆 Sistema de Ranks**: Recompense a participação com um sistema de níveis e ranks personalizáveis.
+- **🎵 Música:** Toque faixas, crie playlists e controle o ambiente musical com comandos intuitivos.
+- **🛡️ Moderação:** Mantenha a ordem com comandos para banimentos, expulsões, silenciamento e gerenciamento de mensagens.
+- **🎉 Entretenimento:** Diversão garantida com jogos, memes e interações que animam sua comunidade.
+- **🏆 Sistema de Ranks:** Incentive a participação através de níveis e ranks totalmente personalizáveis.
 
-## 📱 Plataformas Suportadas
+## 📱 Plataformas Compatíveis
 
-- ✅ **Android**: Integração via app Discord.
-- ✅ **iOS**: Suporte total no aplicativo Discord.
-- ✅ **Web**: Funciona perfeitamente no navegador.
+- ✅ **Android:** Utilização via app oficial do Discord.
+- ✅ **iOS:** Totalmente suportado no aplicativo Discord.
+- ✅ **Web:** Compatível com todos os navegadores modernos.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Empregadas
 
-Petrus foi construído com tecnologias modernas para garantir desempenho e escalabilidade:
+Desenvolvido com tecnologias modernas, o Petrus assegura desempenho confiável e escalabilidade:
 
 <p align="left">
   <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer">
@@ -37,15 +41,15 @@ Petrus foi construído com tecnologias modernas para garantir desempenho e escal
   </a>
 </p>
 
-## 🚀 Como Começar
+## 🚀 Guia de Instalação
 
-1. **Convide o Bot**: Adicione o Petrus ao seu servidor Discord [clicando aqui](https://discord.com/oauth2/authorize?client_id=1220409917282713650&permissions=1103034313814&integration_type=0&scope=bot).
-2. **Configuração**: Use o comando `/ajuda` para explorar todos os recursos e personalizar o bot.
+1. **Convide o Bot:** Adicione o Petrus ao seu servidor Discord [clicando aqui](https://discord.com/oauth2/authorize?client_id=1220409917282713650&permissions=1103034313814&integration_type=0&scope=bot).
+2. **Configuração Inicial:** Utilize o comando `/ajuda` para acessar a lista completa de funcionalidades e personalizar o bot conforme sua necessidade.
 
 ## 📜 Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está disponível sob a [Licença MIT](LICENSE).
 
 ---
 
-Feito com 💜 pela comunidade para a comunidade!
+Desenvolvido com 💜 pela comunidade para a comunidade!
