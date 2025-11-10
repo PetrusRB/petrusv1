@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '../card';
-import { MessageSquare, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import Image from 'next/image';
 
 export const CardSuporte = () => {
