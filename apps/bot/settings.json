@@ -4,6 +4,7 @@
   "emojis": {
     "static": {
       "hammer": "<:hammer:1365116397864226846>",
+      "translate": "<:translate:1437226846038130799>",
       "adminroblox": "<:adminroblox:1434420139163652107>",
       "verified": "<:verified:1434423253920780288>",
       "yellowstaff": "<:yellowstaff:1434422451898552320>",
@@ -58,7 +59,7 @@
   },
   "colors": {
     "default": "#2B2D31",
-    "primary": "#3b82f6",
+    "primary": "#fbe72b",
     "secondary": "#4f545c",
     "success": "#22c55e",
     "danger": "#ED4245",
