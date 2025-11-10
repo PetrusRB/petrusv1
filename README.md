@@ -9,7 +9,7 @@
 
 Petrus é um bot multifuncional para Discord criado para impulsionar comunidades com simplicidade e eficiência. Ele combina **música**, **moderação**, **entretenimento** e um poderoso **sistema de ranks** para manter seu servidor organizado, ativo e divertido.
 
-[![Discord](https://img.shields.io/discord/123456789?label=Suporte%20no%20Discord&style=flat-square)](https://discord.gg/seu-link)
+[![Discord](https://img.shields.io/discord/123456789?label=Suporte%20no%20Discord&style=flat-square)](https://discord.gg/DWcFj55z)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ## ✨ Funcionalidades
