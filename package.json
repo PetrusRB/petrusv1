@@ -30,6 +30,7 @@
     "cookie": "^1.0.2",
     "css-loader": "^7.1.2",
     "dotenv": "16.5.0",
+    "embla-carousel-react": "^8.6.0",
     "expo": "~52.0.11",
     "flyonui": "2.1.0",
     "framer-motion": "12.9.7",

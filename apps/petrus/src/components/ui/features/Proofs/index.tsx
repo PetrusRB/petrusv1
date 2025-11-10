@@ -3,11 +3,19 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '../../carousel';
 
 interface Proof {
   title: string;
   description: string;
-  image: string;
+  category: string;
+  image: string[];
   badge: string;
   highlight: string;
 }
@@ -17,15 +25,23 @@ const proofs: Proof[] = [
     title: 'Sistema de Moderação',
     description:
       'Comandos de banimento, mute e kick totalmente funcionais e integrados ao Discord. Mantenha seu servidor seguro com ferramentas poderosas e fáceis de usar.',
-    image: '/placeholder.png',
+    category: 'moderation',
+    image: [
+      '/proofs/kick.png',
+      '/proofs/ban.png',
+      '/proofs/mute.png',
+      '/proofs/unmute.png',
+      '/proofs/unban.png',
+    ],
     badge: 'Segurança',
-    highlight: 'Ban, Mute, Kick',
+    highlight: 'Ban, Mute, Unmute, Unban, Kick',
   },
   {
     title: 'Música de Alta Qualidade',
     description:
       'Toque, pause e pule faixas com reações — tudo em tempo real. Suporte para YouTube, Spotify e SoundCloud com qualidade premium.',
-    image: '/placeholder.png',
+    category: 'music',
+    image: ['/placeholder.png'],
     badge: 'Entretenimento',
     highlight: 'YouTube, Spotify',
   },
@@ -33,7 +49,8 @@ const proofs: Proof[] = [
     title: 'Pesquisas Inteligentes',
     description:
       'Use o comando /pesquisar para encontrar usuários, canais e mensagens instantaneamente. Busca avançada com filtros personalizados.',
-    image: '/placeholder.png',
+    category: 'search',
+    image: ['/placeholder.png'],
     badge: 'Utilidade',
     highlight: 'Busca em tempo real',
   },
@@ -41,7 +58,8 @@ const proofs: Proof[] = [
     title: 'Sistema de Economia',
     description:
       'Ganhe moedas, aposte e veja seu ranking subir no servidor. Sistema completo com loja, inventário e missões diárias.',
-    image: '/placeholder.png',
+    category: 'economy',
+    image: ['/placeholder.png'],
     badge: 'Gamificação',
     highlight: 'Moedas, Ranking',
   },
@@ -115,20 +133,33 @@ export const ProofSection = () => {
                     className="relative z-10"
                   >
                     {/* Image container */}
-                    <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-primary/30 bg-card shadow-2xl">
-                      <Image
-                        src={proof.image}
-                        alt={proof.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover"
-                        quality={90}
-                        priority={index < 2}
-                      />
+                    <div className="relative w-full aspect-video min-h-[300px] rounded-2xl overflow-hidden border-2 border-primary/30 bg-card shadow-2xl">
+                      <Carousel className="relative w-full h-full">
+                        <CarouselContent>
+                          {proof.image.map((img, i) => (
+                            <CarouselItem
+                              key={i}
+                              className="relative h-[300px] w-full"
+                            >
+                              <div className="relative w-full h-full flex items-center justify-center">
+                                <Image
+                                  src={img}
+                                  alt={proof.title}
+                                  fill
+                                  className="object-contain rounded-xl"
+                                  sizes="100vw"
+                                  quality={90}
+                                />
+                              </div>
+                            </CarouselItem>
+                          ))}
+                        </CarouselContent>
 
+                        <CarouselPrevious className="left-2 top-1/2 -translate-y-1/2 z-20" />
+                        <CarouselNext className="right-2 top-1/2 -translate-y-1/2 z-20" />
+                      </Carousel>{' '}
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent pointer-events-none" />
-
                       {/* Highlight badge on image */}
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -141,7 +172,6 @@ export const ProofSection = () => {
                           {proof.highlight}
                         </span>
                       </motion.div>
-
                       {/* Hover overlay sutil */}
                       <motion.div
                         className="absolute inset-0 bg-primary/5 pointer-events-none"
@@ -198,6 +228,7 @@ export const ProofSection = () => {
                     <motion.button
                       whileHover={{ x: 5 }}
                       transition={{ duration: 0.2 }}
+                      onClick={() => router.push(`/commands/${proof.category}`)}
                       className="mt-4 inline-flex items-center gap-2 text-primary font-semibold group cursor-pointer"
                     >
                       Saiba mais
