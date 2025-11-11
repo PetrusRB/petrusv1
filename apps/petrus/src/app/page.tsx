@@ -1,6 +1,5 @@
 import { Hero } from '@/components/ui/hero';
 import { Features } from '@/components/ui/features';
-import { Footer } from '@/components/ui/footer';
 import { CardSuporte } from '@/components/ui/suporte/cardsuporte';
 
 export default function HomePage() {
@@ -22,7 +21,6 @@ export default function HomePage() {
           <CardSuporte />
         </Hero.Container>
       </Hero.Div>
-      <Footer />
     </div>
   );
 }

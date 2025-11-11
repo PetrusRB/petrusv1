@@ -17,6 +17,7 @@ createEvent({
             logger.error("Database not started");
             return;
         }
+        
 
         logger.success(`Logged in as ${client.user.tag} 🤖`);
     },

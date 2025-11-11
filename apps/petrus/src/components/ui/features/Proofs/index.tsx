@@ -132,23 +132,20 @@ export const ProofSection = () => {
                     }}
                     className="relative z-10"
                   >
-                    {/* Image container */}
-                    <div className="relative w-full aspect-video min-h-[300px] rounded-2xl overflow-hidden border-2 border-primary/30 bg-card shadow-2xl">
-                      <Carousel className="relative w-full h-full">
-                        <CarouselContent>
+                    <div className="relative w-full rounded-2xl overflow-hidden border-2 border-primary/30 bg-card shadow-2xl">
+                      <Carousel className="relative w-full">
+                        <CarouselContent className="w-full">
                           {proof.image.map((img, i) => (
-                            <CarouselItem
-                              key={i}
-                              className="relative h-[300px] w-full"
-                            >
-                              <div className="relative w-full h-full flex items-center justify-center">
+                            <CarouselItem key={i} className="relative w-full">
+                              {/* Aspect wrapper garante altura proporcional */}
+                              <div className="relative aspect-video w-full">
                                 <Image
                                   src={img}
                                   alt={proof.title}
                                   fill
-                                  className="object-contain rounded-xl"
-                                  sizes="100vw"
-                                  quality={90}
+                                  className="object-contain"
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                  priority={i === 0}
                                 />
                               </div>
                             </CarouselItem>
@@ -157,22 +154,12 @@ export const ProofSection = () => {
 
                         <CarouselPrevious className="left-2 top-1/2 -translate-y-1/2 z-20" />
                         <CarouselNext className="right-2 top-1/2 -translate-y-1/2 z-20" />
-                      </Carousel>{' '}
+                      </Carousel>
+
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/30 to-transparent pointer-events-none" />
-                      {/* Highlight badge on image */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5 }}
-                        className="absolute bottom-4 left-4 px-4 py-2 rounded-lg bg-background/80 backdrop-blur-md border border-primary/30"
-                      >
-                        <span className="text-primary font-semibold text-sm">
-                          {proof.highlight}
-                        </span>
-                      </motion.div>
-                      {/* Hover overlay sutil */}
+
+                      {/* Hover overlay */}
                       <motion.div
                         className="absolute inset-0 bg-primary/5 pointer-events-none"
                         initial={{ opacity: 0 }}
@@ -192,38 +179,26 @@ export const ProofSection = () => {
                     transition={{ duration: 0.7, delay: 0.2 }}
                   >
                     {/* Badge */}
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.2 }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-6 cursor-default"
-                    >
-                      <motion.div
-                        className="w-2 h-2 rounded-full bg-primary"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [1, 0.8, 1],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      />
-                      <span className="text-primary text-sm font-semibold uppercase tracking-wide">
-                        {proof.badge}
-                      </span>
-                    </motion.div>
-
                     {/* Title */}
                     <h3 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
                       {proof.title}
                     </h3>
-
+                    {/* Highlight badge on image */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.5 }}
+                      className="inline-flex items-center mb-3 px-4 py-2 rounded-lg bg-background/80 backdrop-blur-md border border-primary/30"
+                    >
+                      <span className="text-primary font-semibold text-sm">
+                        {proof.highlight}
+                      </span>
+                    </motion.div>{' '}
                     {/* Description */}
                     <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
                       {proof.description}
                     </p>
-
                     {/* Learn more link */}
                     <motion.button
                       whileHover={{ x: 5 }}

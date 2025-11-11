@@ -3,6 +3,7 @@ import '@/assets/global.css';
 import { cookies } from 'next/headers';
 
 import GlobalClientWrapper from '@/providers/GlobalClientWrapper';
+import { Footer } from '@/components/ui/footer';
 export const metadata = {
   title: 'Petrus ',
   description: 'A discord bot.',
@@ -23,6 +24,7 @@ export default async function RootLayout({
         {/* Espaço para compensar a navbar fixa */}
         <div className="h-[88px]" aria-hidden="true" />
         <GlobalClientWrapper>{children}</GlobalClientWrapper>
+        <Footer />
       </body>
     </html>
   );
