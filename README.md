@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://media.discordapp.net/attachments/1323017360269119520/1436227667719491585/letraP.png?ex=690ed6bf&is=690d853f&hm=59b3ad2dbb258abf071ed8f463d0d55244cece785240a1d1cfd02d3f001ff6b2&=&format=webp&quality=lossless&width=626&height=626"
+  <img src="https://ik.imagekit.io/9k3mcoolader/letraP.png?updatedAt=1763177727683"
        alt='Icone'
        width="140"
        style="border-radius:50%; box-shadow:0 0 20px gold;" />
