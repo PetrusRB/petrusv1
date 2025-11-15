@@ -19,10 +19,10 @@ Petrus é um bot versátil para Discord desenvolvido para fortalecer comunidades
 
 ## ✨ Funcionalidades
 
-- **[x] Música** — Controle total: tocar, pular, pausar, playlists e muito mais. [Kazagumo + Shoukaku]
-- **[x] Moderação** — Ferramentas diretas para manter a ordem: ban, kick, mute, clear.
-- **[x] Entretenimento** — Jogos, memes, interações e comandos divertidos.
-- **[x] Ranks** — Sistema de níveis personalizável para engajar e recompensar membros.
+- [x] Música\*\* — Controle total: tocar, pular, pausar, playlists e muito mais. [Kazagumo + Shoukaku]
+- [x] Moderação\*\* — Ferramentas diretas para manter a ordem: ban, kick, mute, clear.
+- [x] Entretenimento\*\* — Jogos, memes, interações e comandos divertidos.
+- [x] Ranks\*\* — Sistema de níveis personalizável para engajar e recompensar membros.
 
 ## 🚀 Instalação
 
