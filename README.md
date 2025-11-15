@@ -9,7 +9,7 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Petrus&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient"/> </a>
 </p>
 
-Petrus é um bot versátil para Discord desenvolvido para fortalecer comunidades de maneira simples e eficaz. Ele mescla **música**, **moderação**, **entretenimento** e um eficiente **sistema de ranks** para manter seu servidor estruturado, dinâmico e agradável.
+Um bot versátil para Discord desenvolvido para fortalecer comunidades de maneira simples e eficaz. Ele mescla **música**, **moderação**, **entretenimento** e um eficiente **sistema de ranks** para manter seu servidor estruturado, dinâmico e agradável.
 
 <p align="center">
   <a href="https://discord.gg/DvDzCqwWjS" target="_blank"> <img src="https://discordapp.com/api/guilds/1436489261317755053/widget.png?style=banner2"/> </a>
@@ -19,10 +19,10 @@ Petrus é um bot versátil para Discord desenvolvido para fortalecer comunidades
 
 ## ✨ Funcionalidades
 
-- [x] Música\*\* — Controle total: tocar, pular, pausar, playlists e muito mais. [Kazagumo + Shoukaku]
-- [x] Moderação\*\* — Ferramentas diretas para manter a ordem: ban, kick, mute, clear.
-- [x] Entretenimento\*\* — Jogos, memes, interações e comandos divertidos.
-- [x] Ranks\*\* — Sistema de níveis personalizável para engajar e recompensar membros.
+- [x] Música — Controle total: tocar, pular, pausar, playlists e muito mais. [Kazagumo + Shoukaku]
+- [x] Moderação — Ferramentas diretas para manter a ordem: ban, kick, mute, clear.
+- [x] Entretenimento — Jogos, memes, interações e comandos divertidos.
+- [x] Ranks — Sistema de níveis personalizável para engajar e recompensar membros.
 
 ## 🚀 Instalação
 
