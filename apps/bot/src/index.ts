@@ -14,8 +14,10 @@ await bootstrap({
   ],
   async beforeLoad(client) {
     const manager = setupMusicManager(client);
-    initializeMusicManager();
     client.music = manager;
     Object.assign(client, { manager });
+  },
+  async whenReady() {
+    initializeMusicManager();
   },
 });

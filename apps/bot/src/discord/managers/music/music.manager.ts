@@ -97,18 +97,17 @@ function setupEvents(manager: Kazagumo): void {
   // Eventos Shoukaku
   // ─────────────────────────────────────────
   manager.shoukaku.on('ready', (name) => {
-    logger.log(`✅ Node ${name || 'Desonhecido'} conectado`);
+    logger.log(`✅ Node ${name || 'Desconhecido'} conectado`);
+    isInitialized = true;
   });
 
-  manager.shoukaku.on('disconnect', (name) => {
-    const players = [...manager.shoukaku.players.values()].filter(
-      (p) => p.node.name === name
-    );
-    players.map((player) => {
-      manager.destroyPlayer(player.guildId);
-      player.destroy();
-    });
-    console.warn(`Lavalink ${name}: Disconnected`);
+  manager.shoukaku.on('error', (name, error) => {
+    logger.error(`❌ Erro no node ${name || 'Desconhecido'}:`);
+    console.error('Detalhes completos:', error);
+  });
+
+  manager.shoukaku.on('disconnect', (name, reason) => {
+    logger.error(`⚠️ Node ${name} desconectado:`, reason);
   });
   manager.shoukaku.on('close', (name, code, reason) => {
     logger.error(
@@ -118,10 +117,6 @@ function setupEvents(manager: Kazagumo): void {
   manager.shoukaku.on('debug', (name, info) =>
     console.debug(`Lavalink ${name}: Debug,`, info)
   );
-
-  manager.shoukaku.on('error', (name, error) => {
-    logger.error(`❌ Erro no node ${name || 'Desonhecido'}:`, error);
-  });
 
   // ─────────────────────────────────────────
   // Eventos Player
