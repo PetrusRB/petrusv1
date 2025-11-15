@@ -14,6 +14,7 @@ Petrus é um bot versátil para Discord desenvolvido para fortalecer comunidades
 <p align="center">
   <a href="https://discord.gg/DvDzCqwWjS" target="_blank"> <img src="https://discordapp.com/api/guilds/1436489261317755053/widget.png?style=banner2"/> </a>
 </p>
+
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ## ✨ Funcionalidades
