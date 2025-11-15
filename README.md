@@ -6,7 +6,7 @@
   <img src="https://ik.imagekit.io/9k3mcoolader/letraP.png?updatedAt=1763177727683"
        alt='Icone'
        width="140"
-       style="border-radius:50%; box-shadow:0 0 20px gold;" />
+       style="border-radius:50%; box-shadow:0 0 20px gold; border: 3px solid gold;"/>
 </p>
 
 Um bot versátil para Discord desenvolvido para fortalecer comunidades de maneira simples e eficaz. Ele mescla **música**, **moderação**, **entretenimento** e um eficiente **sistema de ranks** para manter seu servidor estruturado, dinâmico e agradável.
