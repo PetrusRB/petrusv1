@@ -10644,6 +10644,20 @@ kareem@2.6.3:
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.6.3.tgz#23168ec8ffb6c1abfd31b7169a6fb1dd285992ac"
   integrity sha512-C3iHfuGUXK2u8/ipq9LfjFfXFxAZMQJJq7vLS45r3D9Y2xQ/m4S8zaR4zMLFWh9AsNPXmcFfUDhTEO8UIC/V6Q==
 
+kazagumo-spotify@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/kazagumo-spotify/-/kazagumo-spotify-2.1.1.tgz#4860bf720c5ebaec7efc97dbd25a43091f45f1a0"
+  integrity sha512-DzdO9KhTjyk2Q5o5iPCE7SmP/2NB96K3xUhbtkBBuODLsrrXrC22AEaRFvCi5ZIC4+aHoqeAw4Vak83VjBScbg==
+  dependencies:
+    undici "^6.19.2"
+
+kazagumo@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/kazagumo/-/kazagumo-3.4.0.tgz#635a82f5b1198ec1f723fe7ca23614bf24659720"
+  integrity sha512-xh/qDSMXJw+rLUzGG0tamXD3HZO8Ao6A5DGPEHF+oeVQxX1cB7k/EjmDE3KJu1GK6xMmdVh1GHtZaPMyTKDLNQ==
+  dependencies:
+    shoukaku "^4.2.0"
+
 keygrip@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/keygrip/-/keygrip-1.1.0.tgz#871b1681d5e159c62a445b0c74b615e0917e7226"
@@ -12490,6 +12504,11 @@ parse-json@^5.0.0, parse-json@^5.2.0:
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
 
+parse-ms@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/parse-ms/-/parse-ms-4.0.0.tgz#c0c058edd47c2a590151a718990533fd62803df4"
+  integrity sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw==
+
 parse-node-version@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parse-node-version/-/parse-node-version-1.0.1.tgz#e2b5dbede00e7fa9bc363607f53327e8b073189b"
@@ -13158,6 +13177,13 @@ pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
+pretty-ms@^9.3.0:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/pretty-ms/-/pretty-ms-9.3.0.tgz#dd2524fcb3c326b4931b2272dfd1e1a8ed9a9f5a"
+  integrity sha512-gjVS5hOP+M3wMm5nmNOucbIrqudzs9v/57bWRHQWLYklXqoXKrVfYW2W9+glfGsqtPgpiz5WwyEEB+ksXIx3gQ==
+  dependencies:
+    parse-ms "^4.0.0"
+
 prisma@^6.19.0:
   version "6.19.0"
   resolved "https://registry.yarnpkg.com/prisma/-/prisma-6.19.0.tgz#9882425df57a7de72f73c6a41592ff9eda0b00a8"
@@ -13325,6 +13351,25 @@ quick-lru@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
+
+rainlink-apple@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/rainlink-apple/-/rainlink-apple-1.0.5.tgz#5990b28a8436b5922317a9d625fc30381230efe7"
+  integrity sha512-uQylcF0v7++eH9aKYj+o5vU0OFxiNJUoQiq0pgfM34P6gxAUGeeR79y6r5S8YYluIHGKBD2dx39133IsOVqwXQ==
+  dependencies:
+    rainlink "^1.0.0"
+
+rainlink-spotify@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/rainlink-spotify/-/rainlink-spotify-1.0.5.tgz#796937b6323bbe24dbe9e866b5cfe4f1dfc8c14f"
+  integrity sha512-UgNFayXsgBkYkQW7DnvFCQ6hiexaLpCCzQu+XaIf/NdKPhmPzl2JUPa2gOzwRsfHKtv+dywrybdty86plPPDLQ==
+  dependencies:
+    rainlink "^1.0.0"
+
+rainlink@^1.0.0, rainlink@^1.2.7:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/rainlink/-/rainlink-1.2.7.tgz#03937ce3400389ec0dc20eaf1c60675c0d0b6a66"
+  integrity sha512-FXG1Y2wAnv1Cdao1sbm3pO4EXYh8VNJVl5NeljL6ejh4vY/9o8i/eUj5HyvD6u1Vibdd2o8wpxWDmIjbYikUsQ==
 
 rambda@^9.1.0:
   version "9.4.2"
@@ -14305,6 +14350,13 @@ shell-quote@^1.6.1, shell-quote@^1.8.1:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.2.tgz#d2d83e057959d53ec261311e9e9b8f51dcb2934a"
   integrity sha512-AzqKpGKjrj7EM6rKVQEPpB288oCfnrEIuyoT9cyF4nmGa7V8Zk6f7RRqYisX8X9m+Q7bd632aZW4ky7EhbQztA==
+
+shoukaku@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-4.2.0.tgz#1718c7ec39e4797638863c0fc474553006c625ec"
+  integrity sha512-3vPQLG484cZ1/2nd4ERRs6XESvGhvD8jZiB0STcpmTtnH6A/6ZcT3iYl00RoU1PZhC7TTrrvCYk1ca+KJjkoYw==
+  dependencies:
+    ws "^8.18.0"
 
 side-channel-list@^1.0.0:
   version "1.0.0"
@@ -15560,6 +15612,11 @@ undici@^6.18.2:
   version "6.21.2"
   resolved "https://registry.yarnpkg.com/undici/-/undici-6.21.2.tgz#49c5884e8f9039c65a89ee9018ef3c8e2f1f4928"
   integrity sha512-uROZWze0R0itiAKVPsYhFov9LxrPMHLMEQFszeI2gCN6bnIIZ8twzBCJcN2LJrBBLfrP0t1FW0g+JmKVl8Vk1g==
+
+undici@^6.19.2:
+  version "6.22.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.22.0.tgz#281adbc157af41da8e75393c9d75a1b788811bc3"
+  integrity sha512-hU/10obOIu62MGYjdskASR3CUAiYaFTtC9Pa6vHyf//mAipSvSQg6od2CnJswq7fvzNS3zJhxoRkgNVaHurWKw==
 
 undici@^7.12.0:
   version "7.16.0"

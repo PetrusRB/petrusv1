@@ -10,6 +10,7 @@ export const guildSchema = new Schema(
     },
     canais: {
       bemvindo: t.string,
+      regras: t.string,
     },
     cargos: {
       mutado: t.string,

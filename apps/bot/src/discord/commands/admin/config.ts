@@ -64,6 +64,12 @@ const configMetadata: ConfigMetadata = {
     },
   },
   canais: {
+    regras: {
+      type: 'channel',
+      description: 'Canal de regras',
+      checkPermissions: true,
+      requireText: true,
+    },
     bemvindo: {
       type: 'channel',
       description: 'Canal de mensagens de boas-vindas',

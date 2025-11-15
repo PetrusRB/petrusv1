@@ -1,16 +1,29 @@
 import { db } from '#database';
-import { GuildMember, TextChannel } from 'discord.js';
+import { EmbedBuilder, GuildMember, TextChannel } from 'discord.js';
 import { logger } from '#settings';
 import { settings } from '#settings';
-import { createEmbed } from '@magicyan/discord';
+type Perm = 'ViewChannel' | 'SendMessages' | 'EmbedLinks';
 
+async function checkChannelPerms(channel: TextChannel, permsToCheck: Perm[]) {
+  // tenta pegar o member do bot de forma segura
+  const me =
+    channel.guild?.members.me ??
+    channel.guild?.members.cache.get(channel.client.user?.id ?? '');
+  if (!me) return { ok: false, missing: permsToCheck }; // sem como checar
+
+  const perms = channel.permissionsFor(me);
+  if (!perms) return { ok: false, missing: permsToCheck };
+
+  const missing = permsToCheck.filter((p) => !perms.has(p));
+  return { ok: missing.length === 0, missing };
+}
 export const SendWelcomeMessage = async (member: GuildMember) => {
   try {
     const guildId = member.guild.id;
 
     // buscar configuração do servidor
     const guildConfig = await db.guilds.findOne({ id: guildId });
-    if (!guildConfig?.welcome?.message === true) {
+    if (guildConfig?.welcome?.message !== true) {
       logger.warn`Não esta ativádo a enviar mensagem de boas vindas pro membro`;
       return;
     }
@@ -18,28 +31,59 @@ export const SendWelcomeMessage = async (member: GuildMember) => {
       logger.warn`Canal de boas-vindas não configurado para o servidor ${member.guild.name}`;
       return;
     }
+    const regrasID = guildConfig.canais.regras;
+    const regrasChannel = member.guild.channels.cache.get(
+      regrasID
+    ) as TextChannel;
 
     const channelId = guildConfig.canais.bemvindo;
     const channel = member.guild.channels.cache.get(channelId) as TextChannel;
-
     if (!channel || !channel.isTextBased()) {
       logger.error`Canal ${channelId} não encontrado ou não é de texto no servidor ${member.guild.name}`;
       return;
     }
 
-    const embed = createEmbed({
-      title: `${settings.emojis.static.wave} Bem-vindo(a) ao servidor!`,
-      color: settings.colors.yellow,
-      description:
-        `Olá ${member}, seja muito bem-vindo(a) a nossa querida comunidade!\n\n` +
-        `Agora somos **${member.guild.memberCount}** membros!`,
-      thumbnail: member.user.displayAvatarURL({ size: 256 }),
-      timestamp: new Date(),
-      footer: {
-        text: `ID: ${member.id}`,
-        iconURL: member.guild.iconURL() || undefined,
-      },
-    });
+    // checar permissões importantes
+    const { ok, missing } = await checkChannelPerms(channel, [
+      'ViewChannel',
+      'SendMessages',
+      'EmbedLinks',
+    ]);
+
+    // se faltou View ou Send -> logar.
+    if (!ok && missing.includes('SendMessages')) {
+      logger.error`Faltam permissões no canal ${channel.name}: ${missing.join(
+        ', '
+      )}`;
+      return;
+    }
+
+    // se falta só EmbedLinks, avisa com texto simples e envia só content (sem embed)
+    if (!ok && missing.includes('EmbedLinks')) {
+      logger.warn`Bot sem permissão de incorporar links (EmbedLinks) no canal ${channel.name}`;
+      await channel.send({
+        content: `⚠️ Não consigo enviar *embeds* aqui. Ative **Incorporar Links / Embed Links** para eu mandar a mensagem de boas-vindas rica.`,
+      });
+      // enviar a versão simples (content) e retornar
+      await channel.send({ content: `${member} Seja bem-vindo(a)!` });
+      return;
+    }
+
+    if (!regrasID || !regrasChannel.isTextBased()) {
+      logger.error`Canal de regras ${regrasID} não encontrado ou não é de texto no servidor ${member.guild.name}`;
+      return;
+    }
+    const embed = new EmbedBuilder()
+      .setColor('Yellow')
+      .setTitle(
+        `${settings.emojis.static.wave} Bem-vindo(a) a nossa comunidade!`
+      )
+      .setDescription(
+        `Olá ${member}, seja muito bem-vindo(a) ao **${member.guild.name}**!\n\n` +
+          `Confira as regras em ${regrasChannel.id || '#regras'}`
+      )
+      .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
+      .setTimestamp();
 
     await channel.send({
       content: `${member}`,
