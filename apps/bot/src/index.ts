@@ -16,7 +16,6 @@ await bootstrap({
     const manager = setupMusicManager(client);
     initializeMusicManager();
     client.music = manager;
-
     Object.assign(client, { manager });
   },
 });

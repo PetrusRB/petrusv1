@@ -1,12 +1,12 @@
 <p align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Petrus&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient"/> </a>
+</p>
+
+<p align="center">
   <img src="https://ik.imagekit.io/9k3mcoolader/letraP.png?updatedAt=1763177727683"
        alt='Icone'
        width="140"
        style="border-radius:50%; box-shadow:0 0 20px gold;" />
-</p>
-
-<p align="center">
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Petrus&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient"/> </a>
 </p>
 
 Um bot versátil para Discord desenvolvido para fortalecer comunidades de maneira simples e eficaz. Ele mescla **música**, **moderação**, **entretenimento** e um eficiente **sistema de ranks** para manter seu servidor estruturado, dinâmico e agradável.

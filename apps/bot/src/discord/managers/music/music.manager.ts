@@ -3,7 +3,7 @@ import { Client } from 'discord.js';
 import Spotify from 'kazagumo-spotify';
 
 import { Kazagumo, KazagumoOptions } from 'kazagumo';
-import { Connectors } from 'shoukaku';
+import { Connectors, NodeOption } from 'shoukaku';
 
 // Singleton - garante que só existe uma instância
 let managerInstance: Kazagumo | null = null;
@@ -12,7 +12,7 @@ let isInitialized = false;
 export function getMusicManager(): Kazagumo {
   if (!managerInstance) {
     throw new Error(
-      '[MusicManager] Manager não foi criado ainda! Chame setupMusicManager() primeiro.'
+      '[MusicManager] manager não foi criado ainda! precisa ser chamada setupMusicManager() primeiro.'
     );
   }
   return managerInstance;
@@ -31,11 +31,11 @@ export function setupMusicManager(client: Client): Kazagumo {
 
   console.log('[MusicManager] 🎵 Criando novo manager...');
 
-  const nodes = [
+  const nodes: NodeOption[] = [
     {
       name: 'Principal',
-      url: `${process.env.LAVA_HOST ?? 'localhost:2333'}`,
-      auth: process.env.LAVA_PASS ?? 'youshallnotpass',
+      url: `${process.env.LAVA_HOST}:${process.env.LAVA_PORT}`,
+      auth: process.env.LAVA_PASS || 'youshallnotpass',
       secure: process.env.LAVA_SECURE === 'true',
     },
   ];
@@ -57,7 +57,14 @@ export function setupMusicManager(client: Client): Kazagumo {
       ],
     } as KazagumoOptions,
     new Connectors.DiscordJS(client),
-    nodes
+    nodes,
+    {
+      moveOnDisconnect: true,
+      resume: true,
+      resumeTimeout: 600,
+      reconnectTries: Infinity,
+      restTimeout: 3000,
+    }
   );
 
   // Configurar eventos
@@ -86,6 +93,9 @@ export function initializeMusicManager(): void {
 }
 
 function setupEvents(manager: Kazagumo): void {
+  // ─────────────────────────────────────────
+  // Eventos Shoukaku
+  // ─────────────────────────────────────────
   manager.shoukaku.on('ready', (name) => {
     logger.log(`✅ Node ${name || 'Desonhecido'} conectado`);
   });
@@ -105,24 +115,23 @@ function setupEvents(manager: Kazagumo): void {
       `❌ Node ${name} está fechado, CÓDIGO ${code} CAUSADO por ${reason}`
     );
   });
+  manager.shoukaku.on('debug', (name, info) =>
+    console.debug(`Lavalink ${name}: Debug,`, info)
+  );
 
   manager.shoukaku.on('error', (name, error) => {
     logger.error(`❌ Erro no node ${name || 'Desonhecido'}:`, error);
   });
 
+  // ─────────────────────────────────────────
+  // Eventos Player
+  // ─────────────────────────────────────────
   manager.on('playerStart', (player, track) => {
     logger.log(`▶️ Tocando: ${track.title} (Guild: ${player.guildId})`);
   });
 
   manager.on('playerEnd', () => {
     logger.log(`⏹️ Música Finalizada`);
-  });
-
-  manager.on('playerResolveError', (player, track, message) => {
-    logger.error(
-      `❌ Erro na música ${track.title || 'Desconhecido'}:`,
-      message
-    );
   });
 
   manager.on('playerEmpty', (player) => {
