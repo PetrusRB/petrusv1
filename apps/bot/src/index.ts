@@ -1,23 +1,2 @@
-import { bootstrap } from '#base';
-
-import { GatewayIntentBits } from 'discord.js';
-import {
-  initializeMusicManager,
-  setupMusicManager,
-} from 'discord/managers/music/music.manager.js';
-await bootstrap({
-  meta: import.meta,
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildVoiceStates,
-  ],
-  async beforeLoad(client) {
-    const manager = setupMusicManager(client);
-    client.music = manager;
-    Object.assign(client, { manager });
-  },
-  async whenReady() {
-    initializeMusicManager();
-  },
-});
+import { Manager } from 'clusters/cluster.manager.js';
+new Manager();

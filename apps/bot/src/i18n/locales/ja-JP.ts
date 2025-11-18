@@ -25,12 +25,75 @@ export default {
         added_to_queue: 'キューに追加しました',
       },
       fields: {
-        duration: '⏱️ 長さ',
-        position: '📊 位置',
+        duration: '長さ',
+        position: '位置',
+        author: '著者',
         playing: '再生中',
         live: 'ライブ',
         requested_by: '{{username}} さんのリクエスト',
         tracks_added: '{{count}} 曲をキューに追加しました',
+      },
+    },
+    help: {
+      name: 'help',
+      description:
+        'ボットの情報を表示します：コマンド、例、ヒント、ショートカットなど。例: /ajuda',
+      errors: {
+        generic_error:
+          'ヘルプを表示中にエラーが発生しました。後でもう一度お試しください。',
+        invalid_input_title: '無効な入力！',
+        invalid_input_description:
+          'コマンド名は最大32文字の英数字、ハイフン、またはアンダースコアのみ使用できます。',
+        not_found_title: 'コマンドが見つかりません！',
+        not_found_description: 'コマンド `{{cmd}}` は存在しません。',
+      },
+      commandInfo: {
+        title: 'コマンド: /{{name}}',
+        description: '/{{name}} の詳細情報です。',
+      },
+      success: {
+        title: 'ヘルプセンター',
+        description: 'カテゴリー別に整理されたコマンドをご覧ください。',
+        footer: 'コマンドは賢く使いましょう！',
+      },
+      endEmbed: {
+        title: '閉鎖',
+        description: '再度ヘルプが必要な場合は、/helpと入力してください。',
+      },
+      commandList: {
+        title: 'コマンドセンター',
+        description: 'カテゴリー別に整理されたコマンドをご覧ください。',
+        footer: 'コマンドは賢く使いましょう！',
+      },
+      noCommands: {
+        title: 'コマンドが見つかりません！',
+        description: '現在利用可能なコマンドはありません。',
+      },
+      error: {
+        title: '内部エラー！',
+        description:
+          'リクエストの処理中にエラーが発生しました。後でもう一度お試しください。',
+      },
+    },
+    search: {
+      name: 'search',
+      description: '音楽を検索',
+      errors: {
+        no_member_info: '音声情報を取得できませんでした',
+        not_in_voice: 'ボイスチャンネルに参加する必要があります',
+        not_yours: 'この操作はあなたのものではありません！',
+        no_results: '結果が見つかりませんでした',
+        no_player: '現在再生中の曲はありません',
+        different_voice_channel: '私と同じボイスチャンネルにいる必要があります',
+        generic_error: '音楽の再開時にエラーが発生しました',
+      },
+      success: {
+        title: '音楽',
+        description: '提供された情報に基づくすべての音楽',
+      },
+      buttons: {
+        select: '選択',
+        cancel: 'キャンセル',
       },
     },
     leave: {
@@ -146,11 +209,16 @@ export default {
       name: 'nowplaying',
       description: '現在の曲情報を表示する',
       errors: {
+        no_member_info: 'オーディオ情報を復元できませんでした。',
+        not_in_voice: 'オーディオチャンネルにいる必要があります',
+        cant_get_current_track: '今の曲から情報を得ることができませんでした',
         no_player: '現在再生中の音楽はありません',
         no_track: '再生中の曲がありません',
+        different_voice_channel:
+          'あなたは私と同じオーディオチャンネルにいる必要があります',
       },
       success: {
-        title: '🎵 現在再生中',
+        title: '現在再生中',
       },
       fields: {
         progress: '⏱️ 進行状況',
@@ -207,11 +275,12 @@ export default {
     },
     loop: {
       name: 'loop',
-      description: 'ループモードを設定する',
+      description: 'リピートモードを設定する',
+
       options: {
         mode: {
           name: 'mode',
-          description: 'ループモード',
+          description: 'リピートモード',
           choices: {
             off: 'オフ',
             track: '現在の曲',
@@ -219,21 +288,27 @@ export default {
           },
         },
       },
+
       errors: {
-        no_member_info: 'ボイス情報を取得できませんでした',
-        not_in_voice: 'ボイスチャンネルに参加する必要があります',
-        no_player: '現在再生中の音楽はありません',
-        different_voice_channel: '同じボイスチャンネルにいる必要があります',
-        generic_error: 'ループ設定中にエラーが発生しました',
+        no_member_info: 'あなたの音声情報を取得できませんでした。',
+        not_in_voice: 'ボイスチャンネルに参加する必要があります。',
+        no_player: '現在再生中の曲はありません。',
+        different_voice_channel:
+          '私と同じボイスチャンネルにいる必要があります。',
+        generic_error: 'リピートモードの設定中にエラーが発生しました。',
       },
+
       success: {
-        title: 'ループ設定',
-        description_off: 'ループを無効にしました',
-        description_track: '現在の曲を繰り返し再生します',
-        description_queue: 'キュー全体を繰り返し再生します',
+        title: 'リピートモードを更新しました',
+        description: {
+          off: 'リピートはオフになりました。',
+          track: '現在の曲をリピートします。',
+          queue: 'キュー全体をリピートします。',
+        },
       },
+
       fields: {
-        changed_by: '{{username}} さんが変更しました',
+        changed_by: '{{username}} によって変更されました',
       },
     },
   },

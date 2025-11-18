@@ -6,10 +6,17 @@ import { t, getLocale } from 'i18n/index.js';
 
 export default createCommand({
   name: 'resume',
+  nameLocalizations: {
+    'pt-BR': 'resumir',
+    'es-ES': 'resumen',
+    fr: 'résumé',
+  },
   description: 'Retomar a música pausada',
   descriptionLocalizations: {
     'en-US': 'Resume the paused song',
     'es-ES': 'Reanudar la canción pausada',
+    fr: 'Reprendre la chanson mise en pause',
+    ja: '一時停止した音楽を再開する',
   },
   type: ApplicationCommandType.ChatInput,
 
@@ -47,7 +54,7 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,

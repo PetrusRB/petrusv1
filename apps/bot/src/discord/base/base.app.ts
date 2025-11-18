@@ -12,6 +12,7 @@ import { baseResponderHandler } from './base.responder.js';
 import { BASE_VERSION, runtimeDisplay } from './base.version.js';
 import ck from 'chalk';
 import glob from 'fast-glob';
+import { getInfo } from 'discord-hybrid-sharding';
 
 interface BootstrapOptions extends Partial<ClientOptions> {
   meta: ImportMeta;
@@ -32,6 +33,7 @@ export async function bootstrap(options: BootstrapOptions) {
   const client = createClient(env.BOT_TOKEN, options);
   options.beforeLoad?.(client);
 
+  console.log('[DEBUG] Workdir usado:', options.meta.dirname);
   await loadModules(options.meta.dirname, options.directories);
 
   if (options.loadLogs ?? true) {
@@ -70,20 +72,39 @@ async function loadModules(workdir: string, directories: string[] = []) {
 function createClient(token: string, options: BootstrapOptions) {
   const client = new Client({
     intents: options.intents ?? CustomItents.All,
+    shards: getInfo().SHARD_LIST,
+    shardCount: getInfo().TOTAL_SHARDS,
     partials: options.partials ?? CustomPartials.All,
     failIfNotExists: options.failIfNotExists ?? false,
   });
   client.token = token;
+
   client.on('ready', async (client) => {
     registerErrorHandlers(client);
 
     await client.guilds.fetch().catch(() => null);
 
+    const clusterId = client.cluster?.id ?? 0;
+    const totalClusters = getInfo().CLUSTER_COUNT ?? 1;
+
     logger.log(
-      ck.green(`● ${ck.greenBright.underline(client.user.username)} online ✓`)
+      ck.green`● ${ck.greenBright.underline(client.user.username)} online ✓` +
+        ck.dim` [Cluster ${clusterId}/${totalClusters - 1}]`
     );
 
-    await baseRegisterCommands(client);
+    // adiciona delay antes de registrar comandos
+    // isso garante que todos os clusters estejam prontos (espero que sim)
+    if (clusterId === 0) {
+      const delayMs = Math.min(totalClusters * 2000, 10000); // Max 10s
+      logger.log(
+        ck.cyan(
+          `[Cluster ${clusterId}] Aguardando ${delayMs}ms para sincronizar clusters...`
+        )
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      await baseRegisterCommands(client);
+    }
 
     if (options.whenReady) {
       options.whenReady(client);

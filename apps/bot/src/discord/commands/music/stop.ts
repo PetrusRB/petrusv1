@@ -7,6 +7,11 @@ import { t, getLocale } from 'i18n/index.js';
 
 export default createCommand({
   name: 'stop',
+  nameLocalizations: {
+    'pt-BR': 'parar',
+    'es-ES': 'detener',
+    fr: 'arrêter',
+  },
   description: 'Parar a música e limpar a fila',
   descriptionLocalizations: {
     'en-US': 'Stop the music and clear the queue',
@@ -54,7 +59,7 @@ export default createCommand({
     }
 
     // Verificar se o bot está no mesmo canal de voz que o usuário
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
@@ -62,11 +67,21 @@ export default createCommand({
         )}`,
       });
     }
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.stop.errors.no_player'
+        )}`,
+      });
+    }
 
     try {
       // Limpar a fila e destruir o player
+      if (player.queueRepeat) player.setQueueRepeat(false);
+      if (player.trackRepeat) player.setTrackRepeat(false);
       player.queue.clear();
-      player.shoukaku.stopTrack();
+      player.stop();
 
       const embed = createEmbed({
         color: settings.colors.success,

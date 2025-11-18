@@ -40,7 +40,7 @@ export default createCommand({
     await interaction.deferReply({ ephemeral: false });
     if (!parsed.success) {
       return interaction.editReply({
-        content: `⚠️ ${parsed.error.errors[0]?.message}`,
+        content: `⚠️ ${parsed.error.issues[0]?.message}`,
       });
     }
     let safeMsg = parsed.data as string;

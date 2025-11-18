@@ -26,12 +26,77 @@ export default {
         added_to_queue: 'Added to Queue',
       },
       fields: {
-        duration: '⏱️ Duration',
-        position: '📊 Position',
+        duration: 'Duration',
+        position: 'Position',
+        author: 'Author',
         playing: 'Playing',
         live: 'Live',
         requested_by: 'Requested by {{username}}',
         tracks_added: '{{count}} songs added to queue',
+      },
+    },
+    help: {
+      name: 'help',
+      description:
+        'Shows bot information: commands, examples, tips, and shortcuts. Ex.: /ajuda',
+      errors: {
+        generic_error:
+          'An error occurred while trying to display the help menu. Please try again later.',
+        invalid_input_title: 'Invalid input!',
+        invalid_input_description:
+          'The command name must contain only letters, numbers, hyphens, or underscores, up to 32 characters.',
+        not_found_title: 'Command not found!',
+        not_found_description: 'The command `{{cmd}}` does not exist.',
+      },
+      commandInfo: {
+        title: 'Command: /{{name}}',
+        description: 'Detailed information about the /{{name}} command.',
+      },
+      success: {
+        title: 'Petrus help center',
+        description: 'See all commands below, organized by category.',
+        footer: 'Use your commands wisely!',
+      },
+      endEmbed: {
+        title: 'Help ended',
+        description: 'If you need help again, type /help',
+      },
+      commandList: {
+        title: 'Command Center',
+        description: 'See all commands below, organized by category.',
+        footer: 'Use your commands wisely!',
+      },
+      noCommands: {
+        title: 'No commands found!',
+        description: 'It seems there are no commands available at the moment.',
+      },
+      error: {
+        title: 'Internal error!',
+        description:
+          'An error occurred while processing your request. Please try again later.',
+      },
+    },
+
+    search: {
+      name: 'search',
+      description: 'Search a music',
+      errors: {
+        no_member_info: 'Could get your voice information',
+        not_in_voice: 'You need to be on a voice channel',
+        not_yours: 'This interaction is not yours!',
+        no_results: 'No results found...',
+        no_player: 'Nothing to play right now',
+        different_voice_channel: 'You need to be on same voice channel as me',
+        generic_error:
+          'An unexpected error was occurred, could search the music.',
+      },
+      success: {
+        title: 'Tracks found.',
+        description: 'All tracks that i found',
+      },
+      buttons: {
+        select: 'Select',
+        cancel: 'Cancel',
       },
     },
     leave: {
@@ -155,13 +220,14 @@ export default {
       errors: {
         no_member_info: 'Could not fetch your voice information',
         not_in_voice: 'You need to be in a voice channel',
+        cant_get_current_track: "Can't get current track information",
         no_player: 'There is nothing playing right now',
         no_track: 'No track is currently playing',
         different_voice_channel:
           'You need to be in the same voice channel as me',
       },
       success: {
-        title: '🎵 Now Playing',
+        title: 'Now Playing',
         description: 'Details for the current track: **{{track}}**',
       },
       fields: {
@@ -227,31 +293,36 @@ export default {
     loop: {
       name: 'loop',
       description: 'Configure repeat mode',
+
       options: {
         mode: {
           name: 'mode',
           description: 'Repeat mode',
           choices: {
             off: 'Off',
-            track: 'Current Track',
-            queue: 'Entire Queue',
+            track: 'Current track',
+            queue: 'Entire queue',
           },
         },
       },
+
       errors: {
-        no_member_info: 'Could not get your voice information',
-        not_in_voice: 'You need to be in a voice channel',
-        no_player: 'Nothing is playing right now',
-        different_voice_channel:
-          'You need to be in the same voice channel as me',
-        generic_error: 'An error occurred while configuring loop',
+        no_member_info: 'Could not retrieve your voice information.',
+        not_in_voice: 'You need to join a voice channel.',
+        no_player: 'There is no music playing at the moment.',
+        different_voice_channel: 'You must be in the same voice channel as me.',
+        generic_error: 'An error occurred while changing the repeat mode.',
       },
+
       success: {
-        title: 'Loop Configured',
-        description_off: 'Loop disabled',
-        description_track: 'Repeating current track',
-        description_queue: 'Repeating entire queue',
+        title: 'Repeat Mode Updated',
+        description: {
+          off: 'Repeat mode disabled.',
+          track: 'Repeating the current track.',
+          queue: 'Repeating the entire queue.',
+        },
       },
+
       fields: {
         changed_by: 'Changed by {{username}}',
       },

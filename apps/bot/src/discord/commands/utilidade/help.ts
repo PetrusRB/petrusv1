@@ -1,405 +1,354 @@
 import { createCommand } from '#base';
 import { settings } from '#settings';
-import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  CommandInteraction,
+  User,
   ApplicationCommandType,
-  Locale,
   ApplicationCommandOptionType,
 } from 'discord.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { pathToFileURL } from 'url';
+import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
+import { getLocale, t } from 'i18n/index.ts';
 
-interface CommandInfo {
+interface LoadedCommand {
   name: string;
   description: string;
 }
 
-// Sistema de traduções
-const translations = {
-  name: {
-    [Locale.EnglishUS]: 'help',
-    [Locale.PortugueseBR]: 'ajuda',
-    [Locale.SpanishES]: 'ayuda',
-    [Locale.French]: 'aide',
-    [Locale.German]: 'hilfe',
-    [Locale.Italian]: 'aiuto',
-    [Locale.Japanese]: 'ヘルプ',
-    [Locale.Korean]: '도움말',
-  },
-  description: {
-    [Locale.EnglishUS]: 'Shows a list of all available commands',
-    [Locale.PortugueseBR]: 'Mostra uma lista de todos os comandos disponíveis',
-    [Locale.SpanishES]: 'Muestra una lista de todos los comandos disponibles',
-    [Locale.French]: 'Affiche une liste de toutes les commandes disponibles',
-    [Locale.German]: 'Zeigt eine Liste aller verfügbaren Befehle',
-    [Locale.Italian]: 'Mostra un elenco di tutti i comandi disponibili',
-    [Locale.Japanese]: '利用可能なすべてのコマンドのリストを表示します',
-    [Locale.Korean]: '사용 가능한 모든 명령어 목록을 표시합니다',
-  },
-  option: {
-    name: {
-      [Locale.EnglishUS]: 'command',
-      [Locale.PortugueseBR]: 'comando',
-      [Locale.SpanishES]: 'comando',
-      [Locale.French]: 'commande',
-      [Locale.German]: 'befehl',
-      [Locale.Italian]: 'comando',
-      [Locale.Japanese]: 'コマンド',
-      [Locale.Korean]: '명령어',
-    },
-    description: {
-      [Locale.EnglishUS]: 'The command you want to see more information about',
-      [Locale.PortugueseBR]: 'O comando que você deseja ver mais informações',
-      [Locale.SpanishES]: 'El comando del que deseas ver más información',
-      [Locale.French]: "La commande dont vous voulez plus d'informations",
-      [Locale.German]: 'Der Befehl, über den Sie mehr erfahren möchten',
-      [Locale.Italian]: 'Il comando di cui vuoi vedere più informazioni',
-      [Locale.Japanese]: '詳細を表示したいコマンド',
-      [Locale.Korean]: '자세한 정보를 보고 싶은 명령어',
-    },
-  },
-  responses: {
-    invalidInput: {
-      title: {
-        [Locale.EnglishUS]: 'Invalid input!',
-        [Locale.PortugueseBR]: 'Entrada inválida!',
-        [Locale.SpanishES]: '¡Entrada inválida!',
-        [Locale.French]: 'Entrée invalide !',
-        [Locale.German]: 'Ungültige Eingabe!',
-      },
-      description: {
-        [Locale.EnglishUS]:
-          'Command name must contain only letters, numbers, hyphens or underscores, up to 32 characters.',
-        [Locale.PortugueseBR]:
-          'O nome do comando deve conter apenas letras, números, hífens ou sublinhados, até 32 caracteres.',
-        [Locale.SpanishES]:
-          'El nombre del comando debe contener solo letras, números, guiones o guiones bajos, hasta 32 caracteres.',
-        [Locale.French]:
-          "Le nom de la commande ne doit contenir que des lettres, chiffres, tirets ou underscores, jusqu'à 32 caractères.",
-      },
-    },
-    notFound: {
-      title: {
-        [Locale.EnglishUS]: 'Command not found!',
-        [Locale.PortugueseBR]: 'Comando não encontrado!',
-        [Locale.SpanishES]: '¡Comando no encontrado!',
-        [Locale.French]: 'Commande introuvable !',
-      },
-      description: {
-        [Locale.EnglishUS]: (cmd: string) =>
-          `The command \`${cmd}\` does not exist.`,
-        [Locale.PortugueseBR]: (cmd: string) =>
-          `O comando \`${cmd}\` não existe.`,
-        [Locale.SpanishES]: (cmd: string) => `El comando \`${cmd}\` no existe.`,
-        [Locale.French]: (cmd: string) =>
-          `La commande \`${cmd}\` n'existe pas.`,
-      },
-    },
-    commandInfo: {
-      title: {
-        [Locale.EnglishUS]: (name: string) => `Command: /${name}`,
-        [Locale.PortugueseBR]: (name: string) => `Comando: /${name}`,
-        [Locale.SpanishES]: (name: string) => `Comando: /${name}`,
-        [Locale.French]: (name: string) => `Commande : /${name}`,
-      },
-    },
-    commandList: {
-      title: {
-        [Locale.EnglishUS]: 'Command Center',
-        [Locale.PortugueseBR]: 'Central de Comandos',
-        [Locale.SpanishES]: 'Centro de Comandos',
-        [Locale.French]: 'Centre de Commandes',
-        [Locale.German]: 'Befehlszentrale',
-      },
-      description: {
-        [Locale.EnglishUS]: 'See below all commands organized by category.',
-        [Locale.PortugueseBR]:
-          'Veja abaixo todos os comandos organizados por categoria.',
-        [Locale.SpanishES]:
-          'Consulta a continuación todos los comandos organizados por categoría.',
-        [Locale.French]:
-          'Voir ci-dessous toutes les commandes organisées par catégorie.',
-      },
-      footer: {
-        [Locale.EnglishUS]: 'Use your commands wisely!',
-        [Locale.PortugueseBR]: 'Use seus comandos com sabedoria!',
-        [Locale.SpanishES]: '¡Usa tus comandos con sabiduría!',
-        [Locale.French]: 'Utilisez vos commandes à bon escient !',
-      },
-    },
-    noCommands: {
-      title: {
-        [Locale.EnglishUS]: 'No commands found!',
-        [Locale.PortugueseBR]: 'Nenhum comando encontrado!',
-        [Locale.SpanishES]: '¡No se encontraron comandos!',
-        [Locale.French]: 'Aucune commande trouvée !',
-      },
-      description: {
-        [Locale.EnglishUS]:
-          'It seems there are no commands available at the moment.',
-        [Locale.PortugueseBR]:
-          'Parece que não há comandos disponíveis no momento.',
-        [Locale.SpanishES]:
-          'Parece que no hay comandos disponibles en este momento.',
-        [Locale.French]:
-          "Il semble qu'il n'y ait aucune commande disponible pour le moment.",
-      },
-    },
-    error: {
-      title: {
-        [Locale.EnglishUS]: 'Internal error!',
-        [Locale.PortugueseBR]: 'Erro interno!',
-        [Locale.SpanishES]: '¡Error interno!',
-        [Locale.French]: 'Erreur interne !',
-      },
-      description: {
-        [Locale.EnglishUS]:
-          'An error occurred while processing your request. Please try again later.',
-        [Locale.PortugueseBR]:
-          'Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.',
-        [Locale.SpanishES]:
-          'Ocurrió un error al procesar tu solicitud. Inténtalo de nuevo más tarde.',
-        [Locale.French]:
-          "Une erreur s'est produite lors du traitement de votre demande. Veuillez réessayer plus tard.",
-      },
-    },
-  },
-};
+type LoadedCategories = Record<string, LoadedCommand[]>;
 
-// Helper para pegar tradução com fallback
-function t(path: any, locale: string, ...args: any[]): string {
-  const value = path[locale] || path[Locale.EnglishUS] || path['en-US'];
-  return typeof value === 'function' ? value(...args) : value || '';
+let cachedCommands: LoadedCategories | null = null;
+
+async function loadCommands(): Promise<LoadedCategories> {
+  if (cachedCommands) return cachedCommands;
+
+  const base = path.resolve(import.meta.dirname, '../');
+  const categories = await fs.readdir(base, { withFileTypes: true });
+
+  const result: LoadedCategories = {};
+
+  for (const dir of categories) {
+    if (!dir.isDirectory()) continue;
+
+    const categoryName = dir.name.replace(/[^a-zA-Z0-9_-]/g, '');
+    if (!categoryName) continue;
+
+    const fullPath = path.join(base, categoryName);
+    const files = await fs.readdir(fullPath).catch(() => []);
+
+    const list: LoadedCommand[] = [];
+
+    for (const file of files) {
+      if (!/\.(js|ts)$/.test(file)) continue;
+
+      const url = pathToFileURL(path.join(fullPath, file)).href;
+
+      try {
+        const mod = await import(url);
+        const cmd = mod?.default;
+
+        if (!cmd?.name || !cmd?.description) continue;
+
+        list.push({
+          name: String(cmd.name),
+          description: String(cmd.description),
+        });
+      } catch {
+        continue;
+      }
+    }
+
+    if (list.length) result[categoryName] = list;
+  }
+
+  cachedCommands = result;
+  return result;
+}
+
+function getCategoryEmoji(category: string) {
+  const map = settings.emojis.categories as Record<string, string>;
+  return map[category] ?? '📁';
+}
+
+function buildHomeEmbed(
+  user: User,
+  locale: any,
+  interaction: CommandInteraction,
+  categories: LoadedCategories
+) {
+  return createEmbed({
+    author: createEmbedAuthor(user),
+    title: `${settings.emojis.help.home} ${t(
+      locale,
+      'commands.help.success.title'
+    )}`,
+    description:
+      `> ${t(locale, 'commands.help.success.description')}\n\n` +
+      Object.keys(categories)
+        .map((c) => `${getCategoryEmoji(c) || '📂'} **${c}**`)
+        .join('\n'),
+
+    thumbnail: { url: interaction.client.user.displayAvatarURL() },
+    color: settings.colors.yellow,
+    footer: { text: t(locale, 'commands.help.success.footer') },
+    timestamp: new Date(),
+  });
+}
+
+function buildCategoryEmbed(
+  user: User,
+  locale: any,
+  interaction: CommandInteraction,
+  categoryName: string,
+  commands: LoadedCommand[]
+) {
+  return createEmbed({
+    author: createEmbedAuthor(user),
+    title: `${getCategoryEmoji(categoryName) ?? '📂'} ${categoryName}`,
+    description: `> ${t(locale, 'commands.help.success.description')}\n\n---`,
+    thumbnail: { url: interaction.client.user.displayAvatarURL() },
+    color: settings.colors.yellow,
+
+    fields: commands.map((cmd) => ({
+      name: `• \`/${cmd.name}\``,
+      value: `> ${cmd.description}`,
+    })),
+
+    footer: { text: `Categoria: ${categoryName}` },
+    timestamp: new Date(),
+  });
+}
+
+/* ------------------ COMPONENTES ------------------ */
+
+function buildHomeButtons(categories: string[]) {
+  const rows: ActionRowBuilder<ButtonBuilder>[] = [];
+  let buffer: ButtonBuilder[] = [];
+
+  for (const c of categories) {
+    buffer.push(
+      new ButtonBuilder()
+        .setCustomId(`help-cat:${c}`)
+        .setLabel(c)
+        .setEmoji(getCategoryEmoji(c) ?? '📁')
+        .setStyle(ButtonStyle.Primary)
+    );
+
+    if (buffer.length === 5) {
+      rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(...buffer));
+      buffer = [];
+    }
+  }
+
+  // Se sobrar botões no buffer, cria mais uma row
+  if (buffer.length) {
+    rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(...buffer));
+  }
+
+  // Última row reservada ao botão STOP
+  rows.push(
+    new ActionRowBuilder<ButtonBuilder>().addComponents(
+      new ButtonBuilder()
+        .setCustomId('help-stop')
+        .setEmoji('🛑')
+        .setStyle(ButtonStyle.Danger)
+    )
+  );
+
+  return rows;
+}
+
+function buildCategoryButtons() {
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setCustomId('help-home')
+      .setEmoji('🏠')
+      .setStyle(ButtonStyle.Secondary)
+  );
 }
 
 export default createCommand({
   name: 'help',
-  nameLocalizations: translations.name,
-  description: 'Shows a list of all available commands',
-  descriptionLocalizations: translations.description,
+  nameLocalizations: {
+    'pt-BR': 'ajuda',
+    'es-ES': 'ajuda',
+    fr: 'aide',
+  },
+  description: 'Shows bot information such as: commands, tips, etc.',
+  descriptionLocalizations: {
+    'pt-BR': 'Mostra informações do bot, tais como: comandos, exemplos, etc.',
+    'es-ES': 'Muestra información sobre el bot, como comandos, consejos, etc.',
+    fr: 'Afficher les informations du bot telles que : commandes, astuces, etc.',
+    ja: 'コマンド、ヒントなど、ボットに関する情報を表示します。',
+  },
   type: ApplicationCommandType.ChatInput,
   options: [
     {
       name: 'command',
-      nameLocalizations: translations.option.name,
-      description: 'The command you want to see more information about',
-      descriptionLocalizations: translations.option.description,
+      nameLocalizations: {
+        'pt-BR': 'comando',
+        'es-ES': 'comando',
+        fr: 'commande',
+        ja: 'コマンド',
+      },
+      description: 'The command you want more info',
+      descriptionLocalizations: {
+        'pt-BR': 'O comando que você quer mais informações',
+        'es-ES': 'El comando del que desea obtener más información',
+        fr: "La commande sur laquelle vous souhaitez obtenir plus d'informations",
+        ja: '詳細情報を知りたいコマンド',
+      },
       type: ApplicationCommandOptionType.String,
-      required: false,
     },
   ],
-  async run(interaction): Promise<any> {
-    const { options, user, locale } = interaction;
-    const argCommand = options.getString('command')?.toLowerCase().trim();
 
-    // Validate input to prevent injection or invalid characters
-    if (argCommand && !/^[a-z0-9_-]{1,32}$/.test(argCommand)) {
-      const invalidInputEmbed = createEmbed({
-        author: createEmbedAuthor(user),
-        title: `${settings.emojis.static.failed} ${t(
-          translations.responses.invalidInput.title,
-          locale
-        )}`,
-        description: t(translations.responses.invalidInput.description, locale),
-        color: settings.colors.danger,
-        timestamp: new Date(),
-      });
+  async run(interaction: CommandInteraction): Promise<any> {
+    const user = interaction.user;
+    const locale = getLocale(interaction.locale);
+
+    const arg = interaction.options.get('command')?.value as string | undefined;
+    const query = arg?.toLowerCase().trim();
+
+    /* ---------------- VALIDAR ARG ---------------- */
+    if (query && !/^[a-z0-9_-]{1,32}$/.test(query)) {
       return interaction.reply({
-        embeds: [invalidInputEmbed],
+        embeds: [
+          createEmbed({
+            author: createEmbedAuthor(user),
+            title: `${settings.emojis.static.failed} ${t(
+              locale,
+              'commands.help.errors.invalid_input_title'
+            )}`,
+            description: t(
+              locale,
+              'commands.help.errors.invalid_input_description'
+            ),
+            color: settings.colors.danger,
+          }),
+        ],
         ephemeral: true,
       });
     }
 
-    const commandsByCategory: Record<string, CommandInfo[]> = {};
-    const commandsBasePath = path.resolve(import.meta.dirname, '../');
+    const categories = await loadCommands();
 
-    try {
-      const categories = await fs.readdir(commandsBasePath, {
-        withFileTypes: true,
-      });
+    /* ---------------- BUSCA DIRETA ---------------- */
+    if (query) {
+      const found = Object.values(categories)
+        .flat()
+        .find((cmd) => cmd.name.toLowerCase() === query);
 
-      for (const categoryDir of categories) {
-        if (!categoryDir.isDirectory()) continue;
-
-        // Sanitize category name to prevent injection
-        const categoryName = categoryDir.name.replace(/[^a-zA-Z0-9_-]/g, '');
-        if (!categoryName) continue;
-
-        const categoryPath = path.join(commandsBasePath, categoryName);
-
-        // Ensure categoryPath is within commandsBasePath to prevent path traversal
-        if (!categoryPath.startsWith(commandsBasePath)) {
-          console.warn(
-            `Tentativa de acesso fora do diretório de comandos: ${categoryPath}`
-          );
-          continue;
-        }
-
-        let commandFiles: string[];
-        try {
-          commandFiles = await fs.readdir(categoryPath);
-        } catch (error) {
-          console.error(
-            `Erro ao ler diretório da categoria ${categoryName}:`,
-            error
-          );
-          continue;
-        }
-
-        const commands: CommandInfo[] = [];
-
-        for (const fileName of commandFiles) {
-          const ext = path.extname(fileName).toLowerCase();
-
-          // Strictly validate file extensions
-          if (ext !== '.js' && ext !== '.ts') continue;
-
-          const fullPath = path.join(categoryPath, fileName);
-
-          // Ensure fullPath is within categoryPath to prevent path traversal
-          if (!fullPath.startsWith(categoryPath)) {
-            console.warn(
-              `Tentativa de acesso fora do diretório da categoria: ${fullPath}`
-            );
-            continue;
-          }
-
-          const fileURL = pathToFileURL(fullPath).href;
-
-          try {
-            const module = await import(fileURL);
-            const command = module?.default;
-
-            // Validate command object
-            if (
-              command &&
-              typeof command === 'object' &&
-              typeof command.name === 'string' &&
-              typeof command.description === 'string' &&
-              /^[a-z0-9_-]{1,32}$/.test(command.name) &&
-              command.description.length <= 100
-            ) {
-              commands.push({
-                name: command.name,
-                description: command.description,
-              });
-            } else {
-              console.warn(
-                `Comando inválido ou sem nome/descrição válida: ${fileName}`
-              );
-            }
-          } catch (error) {
-            console.error(`Erro ao importar comando ${fileName}:`, error);
-          }
-        }
-
-        if (commands.length) {
-          commandsByCategory[categoryName] = commands;
-        }
-      }
-
-      // Handle specific command query
-      if (argCommand) {
-        let found: CommandInfo | undefined;
-
-        for (const commandList of Object.values(commandsByCategory)) {
-          found = commandList.find((c) => c.name.toLowerCase() === argCommand);
-          if (found) break;
-        }
-
-        if (!found) {
-          const notFoundEmbed = createEmbed({
-            author: createEmbedAuthor(user),
-            title: `${settings.emojis.static.failed} ${t(
-              translations.responses.notFound.title,
-              locale
-            )}`,
-            description: t(
-              translations.responses.notFound.description,
-              locale,
-              argCommand
-            ),
-            color: settings.colors.danger,
-            timestamp: new Date(),
-          });
-          return interaction.reply({
-            embeds: [notFoundEmbed],
-            ephemeral: true,
-          });
-        }
-
-        const embed = createEmbed({
-          author: createEmbedAuthor(user),
-          title: `${settings.emojis.static.slash} ${t(
-            translations.responses.commandInfo.title,
-            locale,
-            found.name
-          )}`,
-          description: `➜ **${found.description}**`,
-          color: settings.colors.yellow,
-          timestamp: new Date(),
-        });
-
-        return interaction.reply({ embeds: [embed], ephemeral: true });
-      }
-
-      // List all commands
-      const fields = Object.entries(commandsByCategory).map(
-        ([category, commands]) => ({
-          name: `📂 ${category[0].toUpperCase() + category.slice(1)}`,
-          value: commands
-            .map((c) => `➜ \`/${c.name}\` — ${c.description}`)
-            .join('\n'),
-          inline: false,
-        })
-      );
-
-      if (fields.length === 0) {
-        const embed = createEmbed({
-          title: `${settings.emojis.static.failed} ${t(
-            translations.responses.noCommands.title,
-            locale
-          )}`,
-          description: t(translations.responses.noCommands.description, locale),
-          color: settings.colors.danger,
-        });
+      if (!found) {
         return interaction.reply({
-          embeds: [embed],
+          embeds: [
+            createEmbed({
+              author: createEmbedAuthor(user),
+              title: `${settings.emojis.static.failed} ${t(
+                locale,
+                'commands.help.errors.not_found_title'
+              )}`,
+              description: t(
+                locale,
+                'commands.help.errors.not_found_description',
+                { cmd: query }
+              ),
+              color: settings.colors.danger,
+            }),
+          ],
           ephemeral: true,
         });
       }
 
-      const embed = createEmbed({
-        author: createEmbedAuthor(user),
-        title: `${settings.emojis.static.rules} ${t(
-          translations.responses.commandList.title,
-          locale
-        )}`,
-        description: t(translations.responses.commandList.description, locale),
-        color: settings.colors.yellow,
-        fields,
-        footer: {
-          text: t(translations.responses.commandList.footer, locale),
-        },
-        timestamp: new Date(),
+      return interaction.reply({
+        embeds: [
+          createEmbed({
+            author: createEmbedAuthor(user),
+            title: `${settings.emojis.static.slash} ${t(
+              locale,
+              'commands.help.noCommands.title'
+            )}`,
+            description: `➜ **${found.description}**`,
+            color: settings.colors.yellow,
+          }),
+        ],
+        ephemeral: true,
       });
-
-      await interaction.reply({ embeds: [embed], ephemeral: true });
-    } catch (error) {
-      console.error('Erro geral ao processar comando /help:', error);
-      const errorEmbed = createEmbed({
-        author: createEmbedAuthor(user),
-        title: `${settings.emojis.static.failed} ${t(
-          translations.responses.error.title,
-          locale
-        )}`,
-        description: t(translations.responses.error.description, locale),
-        color: settings.colors.danger,
-        timestamp: new Date(),
-      });
-      return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
+
+    /* ---------------- PAGINAÇÃO ---------------- */
+    const keys = Object.keys(categories);
+    if (!keys.length) {
+      return interaction.reply({
+        embeds: [
+          createEmbed({
+            title: t(locale, 'commands.help.noCommands.title'),
+            description: t(locale, 'commands.help.noCommands.description'),
+            color: settings.colors.danger,
+          }),
+        ],
+        ephemeral: true,
+      });
+    }
+
+    let index = 0;
+    const homeEmbed = buildHomeEmbed(user, locale, interaction, categories);
+
+    const replyMsg = await interaction.reply({
+      embeds: [buildHomeEmbed(user, locale, interaction, categories)],
+      components: buildHomeButtons(keys),
+      ephemeral: true,
+      fetchReply: true,
+    });
+
+    const collector = replyMsg.createMessageComponentCollector({
+      time: 5 * 60 * 1000,
+      filter: (i) => i.user.id === user.id,
+    });
+    const endEmbed = createEmbed({
+      title: `**🛑 ${t(locale, 'commands.help.endEmbed.title')}**`,
+      description: `${t(locale, 'commands.help.endEmbed.description')}`,
+      color: settings.colors.danger,
+    });
+
+    collector.on('collect', async (btn) => {
+      const [type, param] = btn.customId.split(':');
+
+      if (type === 'help-cat') {
+        const name = param;
+        const commands = categories[name];
+
+        await btn.update({
+          embeds: [
+            buildCategoryEmbed(user, locale, interaction, name, commands),
+          ],
+          components: [buildCategoryButtons()],
+        });
+        return;
+      }
+
+      if (type === 'help-home') {
+        await btn.update({
+          embeds: [homeEmbed],
+          components: buildHomeButtons(keys),
+        });
+        return;
+      }
+
+      if (type === 'help-stop') {
+        collector.stop('stop');
+        await btn.update({ embeds: [endEmbed], components: [] });
+      }
+    });
+
+    collector.on('end', async () => {
+      try {
+        await replyMsg.edit({ embeds: [endEmbed], components: [] });
+      } catch {}
+    });
   },
 });
-

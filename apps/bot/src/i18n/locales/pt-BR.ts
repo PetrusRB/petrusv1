@@ -1,5 +1,3 @@
-import { describe } from 'node:test';
-
 export default {
   commands: {
     play: {
@@ -28,12 +26,54 @@ export default {
         added_to_queue: 'Adicionado à Fila',
       },
       fields: {
-        duration: '⏱️ Duração',
-        position: '📊 Posição',
+        duration: 'Duração',
+        position: 'Posição',
+        author: 'Autor',
         playing: 'Tocando',
         live: 'Ao vivo',
         requested_by: 'Solicitado por {{username}}',
         tracks_added: '{{count}} músicas adicionadas à fila',
+      },
+    },
+    help: {
+      name: 'help',
+      description:
+        'Mostra informações do bot: comandos, exemplos, dicas e atalhos. Ex.: /ajuda',
+      errors: {
+        generic_error:
+          'Ocorreu um erro ao tentar exibir a ajuda. Tente novamente mais tarde.',
+        invalid_input_title: 'Entrada inválida!',
+        invalid_input_description:
+          'O nome do comando deve conter apenas letras, números, hífens ou sublinhados, até 32 caracteres.',
+        not_found_title: 'Comando não encontrado!',
+        not_found_description: 'O comando `{{cmd}}` não existe.',
+      },
+      commandInfo: {
+        title: 'Comando: /{{name}}',
+        description: 'Informações detalhadas sobre o comando /{{name}}.',
+      },
+      success: {
+        title: 'Central de Ajuda',
+        description: 'Veja abaixo todos os comandos organizados por categoria.',
+        footer: 'Use seus comandos com sabedoria!',
+      },
+      endEmbed: {
+        title: 'Ajuda encerrada',
+        description: 'Se você precisar de ajuda novamente, digite: /ajuda',
+      },
+      commandList: {
+        title: 'Central de Comandos',
+        description: 'Veja abaixo todos os comandos organizados por categoria.',
+        footer: 'Use seus comandos com sabedoria!',
+      },
+      noCommands: {
+        title: 'Nenhum comando encontrado!',
+        description: 'Parece que não há comandos disponíveis no momento.',
+      },
+      error: {
+        title: 'Erro interno!',
+        description:
+          'Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.',
       },
     },
     leave: {
@@ -90,6 +130,28 @@ export default {
       },
       fields: {
         paused_by: 'Pausado por {{username}}',
+      },
+    },
+    search: {
+      name: 'search',
+      description: 'Pesquisa uma música',
+      errors: {
+        no_member_info: 'Não foi possível obter suas informações de voz',
+        not_in_voice: 'Você precisa estar em um canal de voz',
+        not_yours: 'Essa interação não é sua!',
+        no_results: 'Nenhum resultado encontrado',
+        no_player: 'Não há nada tocando no momento',
+        different_voice_channel:
+          'Você precisa estar no mesmo canal de voz que eu',
+        generic_error: 'Ocorreu um erro ao retomar a música',
+      },
+      success: {
+        title: 'Resultados de busca',
+        description: 'Todas as músicas com base ao que você forneceu',
+      },
+      buttons: {
+        select: 'Selecionar',
+        cancel: 'Cancelar',
       },
     },
     resume: {
@@ -155,13 +217,14 @@ export default {
       errors: {
         no_member_info: 'Não foi possível obter suas informações de voz',
         not_in_voice: 'Você precisa estar em um canal de voz',
+        cant_get_current_track: 'Não foi possivel obter a música atual',
         no_player: 'Não há nada tocando no momento',
         no_track: 'Nenhuma música tocando',
         different_voice_channel:
           'Você precisa estar no mesmo canal de voz que eu',
       },
       success: {
-        title: '🎵 Tocando Agora',
+        title: 'Tocando Agora',
         description: 'Informações sobre a faixa atual: **{{track}}**',
       },
       fields: {
@@ -227,31 +290,39 @@ export default {
     loop: {
       name: 'loop',
       description: 'Configurar modo de repetição',
+
       options: {
         mode: {
           name: 'mode',
           description: 'Modo de repetição',
           choices: {
             off: 'Desligado',
-            track: 'Música Atual',
-            queue: 'Fila Inteira',
+            track: 'Música atual',
+            queue: 'Fila inteira',
           },
         },
       },
+
       errors: {
-        no_member_info: 'Não foi possível obter suas informações de voz',
-        not_in_voice: 'Você precisa estar em um canal de voz',
-        no_player: 'Não há nada tocando no momento',
+        no_member_info: 'Não foi possível obter informações sobre você.',
+        not_in_voice: 'Você precisa entrar em um canal de voz.',
+        no_player: 'Nenhuma música está tocando no momento.',
         different_voice_channel:
-          'Você precisa estar no mesmo canal de voz que eu',
-        generic_error: 'Ocorreu um erro ao configurar o loop',
+          'Você precisa estar no mesmo canal de voz que eu.',
+        generic_error: 'Ocorreu um erro ao configurar o modo de repetição.',
       },
+
       success: {
-        title: 'Loop Configurado',
-        description_off: 'Loop desativado',
-        description_track: 'Repetindo música atual',
-        description_queue: 'Repetindo fila inteira',
+        title: 'Modo de Repetição Atualizado',
+
+        // descrições mais consistentes e naturais
+        description: {
+          off: 'Repetição desativada.',
+          track: 'Repetindo apenas a música atual.',
+          queue: 'Repetindo toda a fila.',
+        },
       },
+
       fields: {
         changed_by: 'Alterado por {{username}}',
       },

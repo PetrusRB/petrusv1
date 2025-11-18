@@ -76,7 +76,7 @@ export default createCommand({
     });
 
     if (!parsed.success) {
-      const err = parsed.error.errors.map((e) => e.message).join(', ');
+      const err = parsed.error.issues.map((e) => e.message).join(', ');
       await interaction.editReply({
         content: `${ERROR_MESSAGES.VALIDATION_ERROR} ${err}`,
       });

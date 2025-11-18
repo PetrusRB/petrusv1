@@ -6,6 +6,11 @@ import { t, getLocale } from 'i18n/index.js';
 
 export default createCommand({
   name: 'pause',
+  nameLocalizations: {
+    'pt-BR': 'pausar',
+    'es-ES': 'pausar',
+    fr: 'pause',
+  },
   description: 'Pausar a música atual',
   descriptionLocalizations: {
     'en-US': 'Pause the current song',
@@ -50,11 +55,19 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
           'commands.pause.errors.different_voice_channel'
+        )}`,
+      });
+    }
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.stop.errors.no_player'
         )}`,
       });
     }

@@ -1,13 +1,17 @@
 import ptBR from './locales/pt-BR.js';
 import enUS from './locales/en-US.js';
 import esES from './locales/es-ES.js';
+import jaJP from './locales/ja-JP.js';
+import frFR from './locales/fr-FR.js';
 
-type Locale = 'pt-BR' | 'en-US' | 'es-ES';
+type Locale = 'pt-BR' | 'en-US' | 'es-ES' | 'fr-FR' | 'ja-JP';
 
 const translations = {
   'pt-BR': ptBR,
   'en-US': enUS,
   'es-ES': esES,
+  'ja-JP': jaJP,
+  'fr-FR': frFR,
 } as const;
 
 export function t(
@@ -48,6 +52,8 @@ export function getLocale(locale?: string): Locale {
   if (normalized.startsWith('pt')) return 'pt-BR';
   if (normalized.startsWith('es')) return 'es-ES';
   if (normalized.startsWith('en')) return 'en-US';
+  if (normalized.startsWith('ja')) return 'ja-JP';
+  if (normalized.startsWith('fr')) return 'fr-FR';
 
   return 'pt-BR'; // Fallback
 }

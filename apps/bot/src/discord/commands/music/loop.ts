@@ -3,12 +3,20 @@ import { settings } from '#settings';
 import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
 import { GuildMember, ApplicationCommandType } from 'discord.js';
 import { t, getLocale } from 'i18n/index.js';
-// Loop modes do Kazagumo
-const KAZA_LOOP = ['none', 'track', 'queue'] as const;
-type KazagumoLoop = (typeof KAZA_LOOP)[number];
+// Modos de loop do Magmastream
+// 0 = none/off, 1 = track, 2 = queue
+export const MAGMA_LOOP_MODES = ['off', 'queue'] as const;
+export type MagmaLoopMode = (typeof MAGMA_LOOP_MODES)[number];
+
+const toggleLocks = new Map<string, boolean>();
 
 export default createCommand({
   name: 'loop',
+  nameLocalizations: {
+    'pt-BR': 'repetir',
+    'es-ES': 'repetir',
+    fr: 'répéter',
+  },
   description: 'Alternar o modo de repetição da música ou da fila',
   descriptionLocalizations: {
     'en-US': 'Toggle the repeat mode for the song or queue',
@@ -24,6 +32,9 @@ export default createCommand({
     const { guild, member } = interaction;
     const locale = getLocale(interaction.locale);
 
+    // ────────────────────────────────
+    // Validações
+    // ────────────────────────────────
     if (!(member instanceof GuildMember)) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
@@ -43,6 +54,9 @@ export default createCommand({
       });
     }
 
+    // ───────────────────────────────────
+    // Cria o player somente se não existe
+    // ───────────────────────────────────
     const player = interaction.client.music.players.get(guild.id);
     if (!player) {
       return interaction.editReply({
@@ -53,7 +67,22 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    // ────────────────────────────────
+    // Verifica se não esta tocando
+    // ────────────────────────────────
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.pause.errors.no_player'
+        )}`,
+      });
+    }
+
+    // ──────────────────────────────────────────────────
+    // Verifica se o bot esta no mesmo canal que o membro
+    // ──────────────────────────────────────────────────
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
@@ -62,37 +91,67 @@ export default createCommand({
       });
     }
 
-    // modo atual
-    const currentMode: KazagumoLoop = player.loop ?? 'none';
+    // ────────────────────────────────────
+    // Lock para evitar toggles concorrentes
+    // ────────────────────────────────────
+    if (toggleLocks.get(guild.id)) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} Aguarde um momento...`,
+      });
+    }
+    toggleLocks.set(guild.id, true);
 
-    const currentIndex = KAZA_LOOP.indexOf(currentMode);
-    const nextMode: KazagumoLoop =
-      KAZA_LOOP[(currentIndex + 1) % KAZA_LOOP.length];
-    const afterNextMode: KazagumoLoop =
-      KAZA_LOOP[(currentIndex + 2) % KAZA_LOOP.length];
+    try {
+      // tentar ler loopMode persistido
+      const persisted = player.get?.('loopMode') as MagmaLoopMode | undefined;
+      const current: MagmaLoopMode =
+        persisted && MAGMA_LOOP_MODES.includes(persisted)
+          ? persisted
+          : player.queueRepeat
+          ? 'queue'
+          : 'off';
 
-    // Aplicar loop no Kazagumo
-    player.setLoop(nextMode);
+      const nextIndex =
+        (MAGMA_LOOP_MODES.indexOf(current) + 1) % MAGMA_LOOP_MODES.length;
+      const next = MAGMA_LOOP_MODES[nextIndex] as MagmaLoopMode;
 
-    const modeName = t(locale, `commands.loop.modes.${nextMode}`);
-    const nextModeName = t(locale, `commands.loop.modes.${afterNextMode}`);
+      const isQueue = next === 'queue';
 
-    const embed = createEmbed({
-      color: settings.colors.primary,
-      author: createEmbedAuthor(interaction.user),
-      title: `🔁 ${t(locale, 'commands.loop.success.title')}`,
-      description: t(locale, 'commands.loop.success.description', {
-        mode: modeName,
-        next: nextModeName,
-      }),
-      footer: {
-        text: t(locale, 'commands.loop.fields.changed_by', {
-          username: interaction.user.username,
-        }),
-      },
-      timestamp: new Date(),
-    });
+      // setar o repeat no player
+      if (player.trackRepeat) player.setTrackRepeat(false);
+      player.setQueueRepeat(Boolean(isQueue));
 
-    return interaction.editReply({ embeds: [embed] });
+      // persistir para compatibilidade
+      player.set('loopMode', next);
+
+      const emoji = next === 'queue' ? '🔁' : '⏹️';
+
+      return interaction.editReply({
+        embeds: [
+          createEmbed({
+            color: settings.colors.primary,
+            author: createEmbedAuthor(interaction.user),
+            title: t(locale, 'commands.loop.success.title'),
+            description: `${emoji} ${t(
+              locale,
+              `commands.loop.success.description.${next}`
+            )}`,
+            footer: {
+              text: t(locale, 'commands.loop.fields.changed_by', {
+                username: interaction.user.username,
+              }),
+            },
+            timestamp: new Date(),
+          }),
+        ],
+      });
+    } catch (err) {
+      console.error('[loop] erro ao alternar modo:', err);
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} Erro interno ao alternar loop.`,
+      });
+    } finally {
+      toggleLocks.delete(guild.id);
+    }
   },
 });

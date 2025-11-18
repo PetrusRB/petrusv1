@@ -95,11 +95,15 @@ export async function baseCommandHandler(interaction: CommandInteraction) {
   if (diff < COOLDOWN) {
     const timeLeft = Math.ceil((COOLDOWN - diff) / 1000);
 
-    // resposta curta, limpa, sem ser chata
-    await interaction.reply({
-      content: `⏳ Aguarde ${timeLeft}s.`,
-      ephemeral: true,
-    });
+    // Verifica se a interação ainda é válida
+    if (!interaction.replied && !interaction.deferred) {
+      await interaction
+        .reply({
+          content: `⏳ Aguarde ${timeLeft}s.`,
+          ephemeral: true,
+        })
+        .catch(() => {});
+    }
 
     return;
   }
@@ -109,7 +113,10 @@ export async function baseCommandHandler(interaction: CommandInteraction) {
   if (block) return;
 
   try {
-    await command.run(interaction as never);
+    // Verifica se a interação ainda é válida antes de executar
+    if (!interaction.replied && !interaction.deferred) {
+      await command.run(interaction as never);
+    }
   } catch (error) {
     if (onError) onError(error, interaction);
     else throw error;
@@ -125,13 +132,28 @@ export async function baseAutocompleteHandler(
   const command = baseStorage.commands.get(interaction.commandName);
   if (command && 'autocomplete' in command && command.autocomplete) {
     const choices = await command.autocomplete(interaction);
-    if (choices && Array.isArray(choices)) {
+    if (choices && Array.isArray(choices) && !interaction.responded) {
       interaction.respond(choices.slice(0, 25));
     }
   }
 }
 
 export async function baseRegisterCommands(client: Client<true>) {
+  // CRÍTICO: Só o cluster 0 deve registrar comandos
+  const clusterId = client.cluster?.id ?? 0;
+
+  if (clusterId !== 0) {
+    logger.log(
+      ck.yellow(
+        `[Cluster ${clusterId}] Pulando registro de comandos (apenas Cluster 0 registra)`
+      )
+    );
+    return;
+  }
+
+  logger.log(
+    ck.cyan(`[Cluster ${clusterId}] Iniciando registro de comandos...`)
+  );
   const plural = (value: number) => (value > 1 ? 's' : '');
 
   const guilds = client.guilds.cache.filter(({ id }) =>

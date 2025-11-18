@@ -1,6 +1,6 @@
 import { createCommand } from '#base';
 import { settings } from '#settings';
-import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
+import { createEmbed } from '@magicyan/discord';
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,

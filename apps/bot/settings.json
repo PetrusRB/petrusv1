@@ -1,12 +1,27 @@
 {
   "default_locale": "pt_BR",
   "default_country": "BR",
+  "default_platform": "spotify",
   "emojis": {
+    "help": {
+      "home": "🏠",
+      "prev": "⬅️",
+      "next": "➡️",
+      "stop": "🛑"
+    },
+    "categories": {
+      "admin": "🛠️",
+      "bitcoin": "<:bitcoin:1434675201911820469>",
+      "diversao": "🎉",
+      "jogos": "👾",
+      "music": "🎵",
+      "utilidade": "⚙️"
+    },
     "static": {
       "hammer": "<:hammer:1365116397864226846>",
       "wave": "<:wave:1437582850655387738>",
+      "queue": "<:queue:1439369479334137856>",
       "daftpunk": "<:daftpunk:1438002840021762148>",
-      "recordspin": "<:recordspin:1438001785020088584>",
       "mikugiggle": "<:mikugiggle:1438001326276612278>",
       "purpleipod": "<:purpleipod:1438001257901195465>",
       "translate": "<:translate:1437226846038130799>",
@@ -52,6 +67,7 @@
     "anim": {
       "guyrocking": "<a:guyrocking:1438000762453229650>",
       "clean": "<a:clean:1365123193018515547>",
+      "recordspin": "<a:recordspin:1438001785020088584>",
       "kittyspin": "<a:kittyspin:1434675336200720394>",
       "yellowlollipop": "<a:yellowlollipop:1434421395147849808>",
       "yellowglittermoon": "<a:yellowglittermoon:1434421393562533939>",

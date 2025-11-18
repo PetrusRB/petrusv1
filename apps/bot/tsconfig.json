@@ -7,6 +7,11 @@
 		"resolveJsonModule": true,
 		"strict": true,
 
+    // Importing 
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "allowImportingTsExtensions": true,
+
 		// Language and environment options
 		"lib": ["ESNext"],
 		"target": "ESNext",
@@ -14,13 +19,13 @@
 		"moduleResolution": "NodeNext",
 		
 		// Linting options
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
 		"noImplicitReturns": true,
 		"noImplicitOverride": true,
 
 		// Output Options
-		"outDir": "./build",
+		"outDir": "./dist",
 		"rootDir": "./src",
 
 		// Path mapping Options

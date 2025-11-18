@@ -10,6 +10,9 @@ import { t, getLocale } from 'i18n/index.js';
 
 export default createCommand({
   name: 'volume',
+  nameLocalizations: {
+    'es-ES': 'volumen',
+  },
   description: 'Ajustar o volume da música atual',
   descriptionLocalizations: {
     'en-US': 'Adjust the current song volume',
@@ -71,11 +74,19 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
           'commands.volume.errors.different_voice_channel'
+        )}`,
+      });
+    }
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.stop.errors.no_player'
         )}`,
       });
     }

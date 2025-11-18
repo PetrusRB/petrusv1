@@ -3,10 +3,15 @@ import { settings } from '#settings';
 import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
 import { GuildMember, ApplicationCommandType } from 'discord.js';
 import { t, getLocale } from 'i18n/index.js';
-import { PlayerState } from 'kazagumo';
+import { StateTypes } from 'magmastream';
 
 export default createCommand({
   name: 'leave',
+  nameLocalizations: {
+    'pt-BR': 'desconectar',
+    'es-ES': 'salir',
+    fr: 'sortir',
+  },
   description: 'Disconecta o bot do canal de voz',
   descriptionLocalizations: {
     'en-US': 'Disconnect bot from voice channel',
@@ -51,7 +56,7 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
@@ -59,7 +64,7 @@ export default createCommand({
         )}`,
       });
     }
-    if (player.state !== PlayerState.CONNECTED) {
+    if (player.state !== StateTypes.Connected) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,

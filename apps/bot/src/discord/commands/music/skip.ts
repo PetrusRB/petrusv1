@@ -6,6 +6,11 @@ import { t, getLocale } from 'i18n/index.js';
 
 export default createCommand({
   name: 'skip',
+  nameLocalizations: {
+    'pt-BR': 'pular',
+    'es-ES': 'saltar',
+    fr: 'passer',
+  },
   description: 'Pular a música atual',
   descriptionLocalizations: {
     'en-US': 'Skip the current song',
@@ -51,7 +56,7 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
@@ -59,8 +64,17 @@ export default createCommand({
         )}`,
       });
     }
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.stop.errors.no_player'
+        )}`,
+      });
+    }
 
-    const currentTrack = player.queue.current;
+    const currentTrack = await player.queue.getCurrent().catch(() => null);
+
     if (!currentTrack) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
@@ -70,7 +84,7 @@ export default createCommand({
       });
     }
 
-    player.skip();
+    player.stop();
 
     const embed = createEmbed({
       color: settings.colors.primary,

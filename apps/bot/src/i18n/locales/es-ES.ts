@@ -27,12 +27,78 @@ export default {
         added_to_queue: 'Añadido a la cola',
       },
       fields: {
-        duration: '⏱️ Duración',
-        position: '📊 Posición',
+        duration: 'Duración',
+        position: 'Posición',
+        author: 'Autor',
         playing: 'Reproduciendo',
         live: 'En vivo',
         requested_by: 'Solicitado por {{username}}',
         tracks_added: '{{count}} canciones añadidas a la cola',
+      },
+    },
+    help: {
+      name: 'help',
+      description:
+        'Muestra información del bot: comandos, ejemplos, consejos y atajos. Ej.: /ajuda',
+      errors: {
+        generic_error:
+          'Ocurrió un error al intentar mostrar la ayuda. Inténtalo nuevamente más tarde.',
+        invalid_input_title: '¡Entrada inválida!',
+        invalid_input_description:
+          'El nombre del comando debe contener solo letras, números, guiones o guiones bajos, con un máximo de 32 caracteres.',
+        not_found_title: '¡Comando no encontrado!',
+        not_found_description: 'El comando `{{cmd}}` no existe.',
+      },
+      commandInfo: {
+        title: 'Comando: /{{name}}',
+        description: 'Información detallada del comando /{{name}}.',
+      },
+      success: {
+        title: 'Centro de Ayuda',
+        description:
+          'Consulta abajo todos los comandos organizados por categoría.',
+        footer: '¡Usa tus comandos con sabiduría!',
+      },
+      endEmbed: {
+        title: 'La ayuda terminó',
+        description: 'Si necesitas ayuda de nuevo, escribe /help',
+      },
+      commandList: {
+        title: 'Centro de Comandos',
+        description:
+          'Consulta abajo todos los comandos organizados por categoría.',
+        footer: '¡Usa tus comandos con sabiduría!',
+      },
+      noCommands: {
+        title: '¡No se encontraron comandos!',
+        description: 'Parece que no hay comandos disponibles en este momento.',
+      },
+      error: {
+        title: '¡Error interno!',
+        description:
+          'Ocurrió un error al procesar tu solicitud. Inténtalo nuevamente más tarde.',
+      },
+    },
+    search: {
+      name: 'search',
+      description: 'Buscar una canción',
+      errors: {
+        no_member_info: 'No se pudo obtener tu información de voz',
+        not_in_voice: 'Necesitas estar en un canal de voz',
+        not_yours: '¡Esta interacción no es tuya!',
+        no_results: 'No se encontraron resultados',
+        no_player: 'No hay nada reproduciéndose en este momento',
+        different_voice_channel:
+          'Necesitas estar en el mismo canal de voz que yo',
+        generic_error: 'Ocurrió un error al reanudar la música',
+      },
+      success: {
+        title: 'Músicas',
+        description: 'Todas las canciones basadas en lo que proporcionaste',
+      },
+      buttons: {
+        select: 'Seleccionar',
+        cancel: 'Cancelar',
       },
     },
     leave: {
@@ -149,12 +215,13 @@ export default {
       errors: {
         no_member_info: 'No se pudo obtener tu información de voz',
         not_in_voice: 'Debes estar en un canal de voz',
+        cant_get_current_track: 'No se puede obtener la canción actual.',
         no_player: 'No hay nada reproduciéndose en este momento',
         no_track: 'No hay ninguna canción reproduciéndose',
         different_voice_channel: 'Debes estar en el mismo canal de voz que yo',
       },
       success: {
-        title: '🎵 Reproduciendo Ahora',
+        title: 'Reproduciendo Ahora',
         description: 'Detalles de la pista actual: **{{track}}**',
       },
       fields: {
@@ -217,7 +284,8 @@ export default {
     },
     loop: {
       name: 'loop',
-      description: 'Configurar el modo de repetición',
+      description: 'Configurar modo de repetición',
+
       options: {
         mode: {
           name: 'mode',
@@ -229,19 +297,24 @@ export default {
           },
         },
       },
+
       errors: {
-        no_member_info: 'No se pudo obtener tu información de voz',
-        not_in_voice: 'Debes estar en un canal de voz',
-        no_player: 'No hay nada reproduciéndose en este momento',
-        different_voice_channel: 'Debes estar en el mismo canal de voz que yo',
-        generic_error: 'Ocurrió un error al configurar el bucle',
+        no_member_info: 'No fue posible obtener tu información de voz.',
+        not_in_voice: 'Necesitas unirte a un canal de voz.',
+        no_player: 'No hay música reproduciéndose en este momento.',
+        different_voice_channel: 'Debes estar en el mismo canal de voz que yo.',
+        generic_error: 'Ocurrió un error al configurar el modo de repetición.',
       },
+
       success: {
-        title: 'Bucle configurado',
-        description_off: 'Bucle desactivado',
-        description_track: 'Repitiendo la canción actual',
-        description_queue: 'Repitiendo la cola completa',
+        title: 'Modo de Repetición Actualizado',
+        description: {
+          off: 'Repetición desactivada.',
+          track: 'Repitiendo la canción actual.',
+          queue: 'Repitiendo toda la cola.',
+        },
       },
+
       fields: {
         changed_by: 'Cambiado por {{username}}',
       },

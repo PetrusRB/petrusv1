@@ -6,6 +6,11 @@ import { t, getLocale } from 'i18n/index.js';
 
 export default createCommand({
   name: 'shuffle',
+  nameLocalizations: {
+    'pt-BR': 'embaralhar',
+    'es-ES': 'barajar',
+    fr: 'mélanger',
+  },
   description: 'Embaralhar a fila de músicas',
   descriptionLocalizations: {
     'en-US': 'Shuffle the music queue',
@@ -50,7 +55,7 @@ export default createCommand({
       });
     }
 
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
@@ -58,10 +63,18 @@ export default createCommand({
         )}`,
       });
     }
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.stop.errors.no_player'
+        )}`,
+      });
+    }
 
     // Verifica se há algo na fila para embaralhar
     const queue = player.queue ?? [];
-    if (!queue || queue.size === 0) {
+    if (!queue || queue.size.length === 0) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,

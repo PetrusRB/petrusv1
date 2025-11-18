@@ -28,12 +28,56 @@ export default {
         added_to_queue: 'Ajouté à la file',
       },
       fields: {
-        duration: '⏱️ Durée',
-        position: '📊 Position',
+        duration: 'Durée',
+        position: 'Position',
+        author: 'Auteur',
         playing: 'Lecture',
         live: 'En direct',
         requested_by: 'Demandé par {{username}}',
         tracks_added: '{{count}} musique(s) ajoutée(s) à la file',
+      },
+    },
+    help: {
+      name: 'help',
+      description:
+        'Affiche des informations sur le bot : commandes, exemples, astuces et raccourcis. Ex. : /ajuda',
+      errors: {
+        generic_error:
+          "Une erreur est survenue lors de l'affichage de l'aide. Veuillez réessayer plus tard.",
+        invalid_input_title: 'Entrée invalide !',
+        invalid_input_description:
+          'Le nom de la commande doit contenir uniquement des lettres, des chiffres, des tirets ou des underscores, avec un maximum de 32 caractères.',
+        not_found_title: 'Commande introuvable !',
+        not_found_description: "La commande `{{cmd}}` n'existe pas.",
+      },
+      commandInfo: {
+        title: 'Commande : /{{name}}',
+        description: 'Informations détaillées sur la commande /{{name}}.',
+      },
+      success: {
+        title: "Centre d'Aide",
+        description:
+          'Découvrez ci-dessous toutes les commandes organisées par catégorie.',
+        footer: 'Utilisez vos commandes avec sagesse !',
+      },
+      endEmbed: {
+        title: "L'aide est terminée.",
+        description: "Si vous avez de nouveau besoin d'aide, tapez /help",
+      },
+      commandList: {
+        title: 'Centre des Commandes',
+        description:
+          'Découvrez ci-dessous toutes les commandes organisées par catégorie.',
+        footer: 'Utilisez vos commandes avec sagesse !',
+      },
+      noCommands: {
+        title: 'Aucune commande trouvée !',
+        description: "Aucune commande n'est disponible pour le moment.",
+      },
+      error: {
+        title: 'Erreur interne !',
+        description:
+          'Une erreur est survenue lors du traitement de votre requête. Veuillez réessayer plus tard.',
       },
     },
     leave: {
@@ -54,6 +98,30 @@ export default {
         description: 'Au revoir, à bientôt',
       },
     },
+    search: {
+      name: 'search',
+      description: 'Recherche une musique',
+      errors: {
+        no_member_info: "Impossible d'obtenir vos informations vocales",
+        not_in_voice: 'Vous devez être dans un canal vocal',
+        not_yours: "Cette interaction n'est pas à vous !",
+        no_results: 'Aucun résultat trouvé',
+        no_player: "Il n'y a rien en train de jouer actuellement",
+        different_voice_channel:
+          'Vous devez être dans le même canal vocal que moi',
+        generic_error:
+          'Une erreur est survenue lors de la reprise de la musique',
+      },
+      success: {
+        title: 'Musiques',
+        description: 'Toutes les musiques basées sur ce que vous avez fourni',
+      },
+      buttons: {
+        select: 'Sélectionner',
+        cancel: 'Annuler',
+      },
+    },
+
     stop: {
       name: 'stop',
       description: 'Arrêter la musique et vider la file',
@@ -157,13 +225,14 @@ export default {
       errors: {
         no_member_info: "Impossible d'obtenir vos informations vocales",
         not_in_voice: 'Vous devez être dans un canal vocal',
+        cant_get_current_track: "Impossible d'obtenir la musique actuelle",
         no_player: 'Aucune lecture en cours pour le moment',
         no_track: "Aucune piste n'est en cours de lecture",
         different_voice_channel:
           'Vous devez être dans le même canal vocal que moi',
       },
       success: {
-        title: '🎵 Lecture en cours',
+        title: 'Lecture en cours',
         description: 'Informations sur la piste actuelle : **{{track}}**',
       },
       fields: {
@@ -229,32 +298,38 @@ export default {
     loop: {
       name: 'loop',
       description: 'Configurer le mode de répétition',
+
       options: {
         mode: {
           name: 'mode',
           description: 'Mode de répétition',
           choices: {
             off: 'Désactivé',
-            track: 'Musique actuelle',
+            track: 'Piste actuelle',
             queue: 'File entière',
           },
         },
       },
+
       errors: {
-        no_member_info: "Impossible d'obtenir vos informations vocales",
-        not_in_voice: 'Vous devez être dans un canal vocal',
-        no_player: "Aucune musique n'est en cours de lecture",
+        no_member_info: 'Impossible d’obtenir vos informations vocales.',
+        not_in_voice: 'Vous devez rejoindre un salon vocal.',
+        no_player: 'Aucune musique n’est en cours de lecture.',
         different_voice_channel:
-          'Vous devez être dans le même canal vocal que moi',
+          'Vous devez être dans le même salon vocal que moi.',
         generic_error:
-          'Une erreur est survenue lors de la configuration de la boucle',
+          'Une erreur est survenue lors de la configuration du mode de répétition.',
       },
+
       success: {
-        title: 'Boucle configurée',
-        description_off: 'Boucle désactivée',
-        description_track: 'Répétition de la musique actuelle',
-        description_queue: 'Répétition de toute la file',
+        title: 'Mode de Répétition Mis à Jour',
+        description: {
+          off: 'Répétition désactivée.',
+          track: 'Répétition de la piste actuelle.',
+          queue: 'Répétition de toute la file.',
+        },
       },
+
       fields: {
         changed_by: 'Modifié par {{username}}',
       },

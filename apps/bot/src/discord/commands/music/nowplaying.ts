@@ -3,10 +3,16 @@ import { settings } from '#settings';
 import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
 import { GuildMember, ApplicationCommandType } from 'discord.js';
 import { t, getLocale } from 'i18n/index.js';
-import prettyMs from 'pretty-ms';
+import { MagmaLoopMode } from './loop.js';
+import { formatDuration } from 'discord/utils/duration.js';
 
 export default createCommand({
   name: 'nowplaying',
+  nameLocalizations: {
+    'pt-BR': 'tocandoagora',
+    'es-ES': 'ahoratocando',
+    fr: 'nowplaying',
+  },
   description: 'Mostra informações sobre a música atual',
   descriptionLocalizations: {
     'en-US': 'Show information about the current song',
@@ -55,7 +61,7 @@ export default createCommand({
     }
 
     // Garante que o membro está no mesmo canal
-    if (player.voiceId !== voiceChannel.id) {
+    if (player.voiceChannelId !== voiceChannel.id) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
@@ -63,21 +69,39 @@ export default createCommand({
         )}`,
       });
     }
+    if (!player.playing) {
+      return interaction.editReply({
+        content: `${settings.emojis.static.failed} ${t(
+          locale,
+          'commands.stop.errors.no_player'
+        )}`,
+      });
+    }
+    const currentTrack = await player.queue.getCurrent().catch(() => null);
 
-    const currentTrack = player.queue.current;
     if (!currentTrack) {
       return interaction.editReply({
         content: `${settings.emojis.static.failed} ${t(
           locale,
-          'commands.nowplaying.errors.no_track'
+          'commands.skip.errors.no_track'
         )}`,
       });
     }
+    // ────────────────────────────────
+    // Determinar estado de loop
+    // ────────────────────────────────
+    const currentMode: MagmaLoopMode = player.queueRepeat ? 'queue' : 'off';
+
+    const loopStatus: Record<MagmaLoopMode, string> = {
+      off: t(locale, 'commands.nowplaying.fields.loop_off'),
+      queue: t(locale, 'commands.nowplaying.fields.loop_queue'),
+    };
 
     // Progresso formatado
     const current = player.position || 0;
-    const total = player.queue.durationLength || 0;
-    const progress = Math.min(current / total, 1);
+    const total = await player.queue.duration();
+
+    const progress = total > 0 ? Math.min(current / total, 1) : 0;
     const barLength = 20;
     const filled = Math.round(barLength * progress);
     const progressBar =
@@ -87,10 +111,11 @@ export default createCommand({
     const embed = createEmbed({
       color: settings.colors.primary,
       author: createEmbedAuthor(interaction.user),
-      title: `🎶 ${t(locale, 'commands.nowplaying.success.title')}`,
-      description: t(locale, 'commands.nowplaying.success.description', {
-        track: `[${currentTrack.title}](${currentTrack.uri})`,
-      }),
+      title: `${settings.emojis.static.mikugiggle} ${t(
+        locale,
+        'commands.nowplaying.success.title'
+      )}`,
+      description: `[${currentTrack.title}](${currentTrack.uri})`,
       fields: [
         {
           name: t(locale, 'commands.nowplaying.fields.author'),
@@ -99,7 +124,12 @@ export default createCommand({
         },
         {
           name: t(locale, 'commands.nowplaying.fields.duration'),
-          value: `${prettyMs(current)} / ${prettyMs(total)}`,
+          value: `${formatDuration(current)} / ${formatDuration(total)}`,
+          inline: true,
+        },
+        {
+          name: t(locale, 'commands.nowplaying.fields.loop'),
+          value: `${loopStatus[currentMode]}`,
           inline: true,
         },
         {
@@ -114,12 +144,14 @@ export default createCommand({
       ],
       thumbnail: {
         url:
-          currentTrack.thumbnail ??
+          currentTrack.artworkUrl ??
           'https://media.discordapp.net/attachments/1323017360269119520/1363748868491186247/grand-teton-national-park-orange-sky-0e6tx144tyhttq4x_1.png?ex=6918b8db&is=6917675b&hm=aae81383b5c6d6718ffcc72bc037bf40b70285cc15025d1ecf78c46748ca05e3&=&format=webp&quality=lossless&width=822&height=548',
       },
       footer: {
         text: t(locale, 'commands.nowplaying.fields.requested_by', {
-          username: `${currentTrack.requester ?? interaction.user.username}`,
+          username: `${
+            currentTrack.requester.username ?? interaction.user.username
+          }`,
         }),
       },
       timestamp: new Date(),
