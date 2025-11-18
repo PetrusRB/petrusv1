@@ -2,10 +2,6 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Petrus&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=gradient"/> </a>
 </p>
 
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&duration=3000&pause=1000&color=00DDB3&center=true&vCenter=true&width=435&lines=Eficaz+Versatil+Poderoso+Útil" />
-</p>
-
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ## ✨ Funcionalidades
