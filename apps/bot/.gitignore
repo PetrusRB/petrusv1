@@ -5,6 +5,9 @@
 /deprecated
 /node_modules
 
+# MagmaStream
+/magmastream
+
 # Files
 /.env
 /.env.dev
