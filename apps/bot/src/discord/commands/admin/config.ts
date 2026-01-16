@@ -4,13 +4,25 @@ import {
   ApplicationCommandType,
   PermissionFlagsBits,
   ApplicationCommandOptionType,
+  GuildMember,
+  Guild,
 } from 'discord.js';
 import { db } from '#database';
 import { z } from 'zod';
 import { createEmbed } from '@magicyan/discord';
+import { Verification } from 'discord/modules/verification/verify.module.ts';
+import { moduleManager } from 'discord/managers/modules/module.manager.ts';
 
 // Tipos para metadados
-type ConfigType = 'role' | 'channel' | 'text' | 'boolean';
+type ConfigType = 'role' | 'module' | 'channel' | 'text' | 'boolean';
+type ModuleHandler = {
+  onEnable?: (ctx: {
+    guild: Guild;
+    bot: GuildMember;
+    member: GuildMember;
+  }) => Promise<void>;
+  onDisable?: (ctx: { guild: Guild; bot: GuildMember }) => Promise<void>;
+};
 
 interface ConfigMetadataItem {
   type: ConfigType;
@@ -19,6 +31,7 @@ interface ConfigMetadataItem {
   checkHierarchy?: boolean;
   checkPermissions?: boolean;
   requireText?: boolean;
+  moduleHandler?: ModuleHandler;
 }
 
 type ConfigMetadata = {
@@ -26,6 +39,7 @@ type ConfigMetadata = {
     [key: string]: ConfigMetadataItem;
   };
 };
+const verification = new Verification();
 
 // Metadados de configuração
 const configMetadata: ConfigMetadata = {
@@ -36,11 +50,37 @@ const configMetadata: ConfigMetadata = {
       checkManaged: false,
       checkHierarchy: false,
     },
+    welcomeMessage: {
+      type: 'text',
+      description: 'Mensagem de entrada/saida',
+      checkManaged: false,
+      checkHierarchy: false,
+    },
+    backgroundImage: {
+      type: 'text',
+      description: 'URL da imagem de fundo',
+      checkManaged: false,
+      checkHierarchy: false,
+    },
     message: {
       type: 'boolean',
       description: 'Mensagem de entrada/saida',
       checkManaged: false,
       checkHierarchy: false,
+    },
+  },
+  modules: {
+    verification: {
+      type: 'boolean',
+      description: 'Modulo de verificação',
+      moduleHandler: {
+        async onEnable({ guild, bot, member }) {
+          await verification.setup(guild, bot, member);
+        },
+        async onDisable({ guild }) {
+          await verification.disable(guild);
+        },
+      },
     },
   },
   cargos: {
@@ -67,6 +107,12 @@ const configMetadata: ConfigMetadata = {
     regras: {
       type: 'channel',
       description: 'Canal de regras',
+      checkPermissions: true,
+      requireText: true,
+    },
+    verificado: {
+      type: 'channel',
+      description: 'Canal de verificação',
       checkPermissions: true,
       requireText: true,
     },
@@ -109,10 +155,11 @@ const configSchema = z
     }
   });
 
-// Função de validação flexível baseada em metadados
+// função de validação baseada em metadados
 async function validateConfig(
   guild: any,
   botMe: any,
+  member: any,
   category: string,
   key: string,
   value: string
@@ -148,7 +195,25 @@ async function validateConfig(
       }
     }
   }
+  // Validação para modulos
+  if (metadata.type === 'module') {
+    if (value !== 'on' && value !== 'off') {
+      return {
+        valid: false,
+        errors: ['O valor de um módulo deve ser `on` ou `off`.'],
+      };
+    }
 
+    const handler = metadata.moduleHandler;
+
+    if (value === 'on' && handler?.onEnable) {
+      await handler.onEnable({ guild, bot: botMe, member });
+    }
+
+    if (value === 'off' && handler?.onDisable) {
+      await handler.onDisable({ guild, bot: botMe });
+    }
+  }
   // Validação de CARGO
   if (metadata.type === 'role') {
     const role = guild.roles.cache.get(value);
@@ -190,6 +255,7 @@ export default createCommand({
   name: 'config',
   description: 'Configurações do bot',
   type: ApplicationCommandType.ChatInput,
+  defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   options: [
     {
       name: 'definir',
@@ -221,6 +287,11 @@ export default createCommand({
       description: 'Ver todas as configurações do servidor',
       type: ApplicationCommandOptionType.Subcommand,
     },
+    {
+      name: 'recarregar',
+      description: 'Recarrega todos os módulos para este servidor',
+      type: ApplicationCommandOptionType.Subcommand,
+    },
   ],
   async run(interaction): Promise<any> {
     const { guild, options, memberPermissions } = interaction;
@@ -246,7 +317,34 @@ export default createCommand({
         ephemeral: true,
       });
     }
+    if (subcommand === 'recarregar') {
+      // roda em paralelo
+      const results = await moduleManager.reloadGuildModules(guildId);
 
+      const ok = results.filter((r) => r.ok).length;
+      const fail = results.length - ok;
+
+      const embed = createEmbed({
+        title: '🔁 Reload de módulos',
+        description: `Guild: **${guild.name}**\nRecarregados: **${ok}** / **${results.length}**\nFalhas: **${fail}**`,
+        color: settings.colors.green,
+        timestamp: new Date(),
+      });
+
+      // attach details
+      embed.addFields({
+        name: 'Detalhes',
+        value:
+          results
+            .map(
+              (r) =>
+                `• **${r.id}** — ${r.ok ? '✅' : `❌ ${r.reason ?? 'erro'}`}`
+            )
+            .join('\n') || 'Nenhum módulo registrado',
+      });
+
+      return interaction.reply({ embeds: [embed], ephemeral: true });
+    }
     // subcomando ver
     if (subcommand === 'ver') {
       const guildConfig = await db.guilds.findOne({ id: guildId });
@@ -363,6 +461,7 @@ export default createCommand({
       const validation = await validateConfig(
         guild,
         botMe,
+        interaction.member,
         category,
         key,
         value

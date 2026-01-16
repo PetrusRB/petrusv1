@@ -9,9 +9,9 @@ createEvent({
   async run(client) {
     client.user.setPresence({
       activities: [
-        { name: `/ajuda para mais comandos`, type: ActivityType.Custom },
+        { name: `/ajuda para mais comandos`, type: ActivityType.Competing },
       ],
-      status: 'online',
+      status: 'dnd',
     });
     const dbStarted = initializeDatabase();
     if (!dbStarted) {

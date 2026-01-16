@@ -1,4 +1,13 @@
 export default {
+  category: {
+    musica: 'music',
+    segurança: 'security',
+    utilidade: 'utils',
+    jogos: 'gaming',
+    diversao: 'fun',
+    bitcoin: 'bitcoin',
+    admin: 'admin',
+  },
   commands: {
     play: {
       name: 'play',
@@ -35,6 +44,46 @@ export default {
         tracks_added: '{{count}} songs added to queue',
       },
     },
+    verify: {
+      name: 'verify',
+      description: 'Verification manager',
+      errors: {
+        generic_error:
+          'An error occurred while trying to manage the verification system.',
+        no_perm: 'You do not have sufficient permissions for this.',
+        no_dm:
+          'I cannot send messages to your DM (private). Check if it is enabled so I can send.',
+        session_expired: 'Session expired!',
+        channel_not_exists: "Channel don't exists. Try to create first",
+        not_enabled:
+          'The verification system is not enabled! Use /config definir category:modules chave:verification value:true to enable the verification system',
+        not_for_you: 'This session is not for you!',
+        already_verified: 'Already verified',
+        invalid_channel:
+          'Please provide a valid channel. Try redefining the channel using /config definir category:canais chave:verificado valor: <channel_id_here>',
+
+        channel_already_exists: 'Configured channel already exists',
+      },
+      dm: {
+        desc: 'Check the image and click Confirm to complete your verification!',
+      },
+      button: {
+        label: 'Verify',
+      },
+      success: {
+        created: 'Channel created successfully.',
+        embed_sent: 'Embed sent successfully.',
+        dm_sent: 'DM sent to your private messages',
+        delete_channel: 'Channel deleted successfully!',
+        verified: 'Successfully verified!',
+      },
+      embed: {
+        title: 'Verification',
+        description: 'Click the button to get verified!',
+        button: 'Verify',
+      },
+    },
+
     help: {
       name: 'help',
       description:
@@ -42,6 +91,8 @@ export default {
       errors: {
         generic_error:
           'An error occurred while trying to display the help menu. Please try again later.',
+        failed_to_process:
+          "Oops.. i couldn't process your interaction right now. Please try again later while I get smarter!",
         invalid_input_title: 'Invalid input!',
         invalid_input_description:
           'The command name must contain only letters, numbers, hyphens, or underscores, up to 32 characters.',

@@ -1,4 +1,13 @@
 export default {
+  category: {
+    musica: 'música',
+    segurança: 'seguridad',
+    utilidade: 'utilidad',
+    jogos: 'juegos',
+    diversao: 'divertido',
+    bitcoin: 'bitcoin',
+    admin: 'administrador',
+  },
   commands: {
     play: {
       name: 'play',
@@ -36,6 +45,45 @@ export default {
         tracks_added: '{{count}} canciones añadidas a la cola',
       },
     },
+    verify: {
+      name: 'verify',
+      description: 'Gestor de verificación',
+      errors: {
+        generic_error:
+          'Ocurrió un error al intentar gestionar el sistema de verificación.',
+        no_perm: 'No tienes permisos suficientes para esto.',
+        no_dm:
+          'No puedo enviar mensajes a tu MD (privado). Verifica que esté activado para que pueda enviar.',
+        session_expired: '¡Sesión expirada!',
+        channel_not_exists: 'El canal no existe. Intente crearlo primero.',
+        not_enabled:
+          'El sistema de verificación no está habilitado. Usa /config definir category:modules chave:verification value:true para habilitar el sistema de verificación',
+        not_for_you: '¡Esta sesión no es para ti!',
+        already_verified: 'Ya estás verificado(a)',
+        invalid_channel:
+          'Proporciona un canal válido. Intenta redefinir el canal usando /config definir category:canais chave:verificado valor: <id_del_canal_aquí>',
+
+        channel_already_exists: 'El canal configurado ya existe',
+      },
+      dm: {
+        desc: '¡Revisa la imagen y haz clic en Confirmar para completar tu verificación!',
+      },
+      button: {
+        label: 'Verificar',
+      },
+      success: {
+        created: 'Canal creado con éxito.',
+        embed_sent: 'Embed enviado con éxito.',
+        dm_sent: 'MD enviado a tu privado',
+        delete_channel: '¡Canal eliminado exitosamente!',
+        verified: '¡Verificado(a) con éxito!',
+      },
+      embed: {
+        title: 'Verificación',
+        description: '¡Haz clic en el botón para ser verificado!',
+        button: 'Verificar',
+      },
+    },
     help: {
       name: 'help',
       description:
@@ -43,6 +91,8 @@ export default {
       errors: {
         generic_error:
           'Ocurrió un error al intentar mostrar la ayuda. Inténtalo nuevamente más tarde.',
+        failed_to_process:
+          'Un error se produce durante el tratamiento de su interacción.',
         invalid_input_title: '¡Entrada inválida!',
         invalid_input_description:
           'El nombre del comando debe contener solo letras, números, guiones o guiones bajos, con un máximo de 32 caracteres.',

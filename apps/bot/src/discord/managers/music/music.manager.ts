@@ -1,5 +1,5 @@
 import { logger } from '#settings';
-import { Client } from 'discord.js';
+import { Client, TextChannel } from 'discord.js';
 import {
   AutoPlayPlatform,
   Manager,
@@ -37,18 +37,18 @@ export function setupMusicManager(client: Client): Manager {
   console.log('[MusicManager] 🎵 Criando novo manager...');
 
   const nodes: NodeOptions[] = [
-    {
-      host: process.env.LAVA_HOST || 'owo',
-      identifier: 'Principal',
-      password: process.env.LAVA_PASS || 'youhallpassword',
-      port: parseInt(process.env.LAVA_PORT || '2333'),
-      useSSL: process.env.LAVA_SECURE === 'true',
-      maxRetryAttempts: 500,
-      retryDelayMs: 300000,
-      enableSessionResumeOption: true,
-      sessionTimeoutSeconds: 300,
-      apiRequestTimeoutMs: 20000,
-    },
+    // {
+    //   host: process.env.LAVA_HOST || 'owo',
+    //   identifier: 'Principal',
+    //   password: process.env.LAVA_PASS || 'youhallpassword',
+    //   port: parseInt(process.env.LAVA_PORT || '2333'),
+    //   useSSL: process.env.LAVA_SECURE === 'true',
+    //   maxRetryAttempts: 500,
+    //   retryDelayMs: 300000,
+    //   enableSessionResumeOption: true,
+    //   sessionTimeoutSeconds: 300,
+    //   apiRequestTimeoutMs: 20000,
+    // },
     {
       host: process.env.LAVA_TEST_HOST || 'owo',
       identifier: 'Segundo',
@@ -107,7 +107,7 @@ export function setupMusicManager(client: Client): Manager {
   });
 
   // Configurar eventos
-  setupEvents(managerInstance);
+  setupEvents(managerInstance, client);
 
   console.log('[MusicManager] ✅ Manager criado com sucesso');
   return managerInstance;
@@ -132,7 +132,7 @@ export function initializeMusicManager(client: Client): void {
   console.log('[MusicManager] ✅ Manager inicializado');
 }
 
-function setupEvents(manager: Manager): void {
+function setupEvents(manager: Manager, client: Client): void {
   // ─────────────────────────────────────────
   // Eventos Node
   // ─────────────────────────────────────────
@@ -161,37 +161,51 @@ function setupEvents(manager: Manager): void {
   // ─────────────────────────────────────────
   // Eventos Player
   // ─────────────────────────────────────────
-  manager.on(ManagerEventTypes.TrackStart, (player, track) => {
-    logger.log(`▶️ Tocando: ${track.title} (Guild: ${player.guildId})`);
-  });
+  // manager.on(ManagerEventTypes.TrackStart, (player, track) => {
+  //   logger.log(`▶️ Tocando: ${track.title} (Guild: ${player.guildId})`);
+  // });
 
-  manager.on(ManagerEventTypes.TrackEnd, async () => {
-    logger.log(`⏹️ Música Finalizada`);
+  manager.on(ManagerEventTypes.TrackEnd, async (player) => {
+    // Remover botões da última mensagem também
+    const messageId = player.get('currentMessageId') as string | undefined;
+
+    if (messageId) {
+      const channel = client.channels.cache.get(
+        player.textChannelId!
+      ) as TextChannel;
+
+      if (channel) {
+        const message = await channel.messages
+          .fetch(messageId)
+          .catch(() => null);
+        if (message) {
+          await message.edit({ components: [] }).catch(() => {});
+        }
+      }
+
+      player.set('currentMessageId', undefined);
+    }
   });
 
   manager.on(ManagerEventTypes.QueueEnd, async (player) => {
-    console.log(`📭 Fila vazia: ${player.guildId}`);
+    // Remover botões da última mensagem também
+    const messageId = player.get('currentMessageId') as string | undefined;
 
-    // Loop desligado → finalizar
-    if (!player.queueRepeat) {
-      console.log(`❌ QueueRepeat OFF — fila não será reiniciada`);
-      return;
+    if (messageId) {
+      const channel = client.channels.cache.get(
+        player.textChannelId!
+      ) as TextChannel;
+
+      if (channel) {
+        const message = await channel.messages
+          .fetch(messageId)
+          .catch(() => null);
+        if (message) {
+          await message.edit({ components: [] }).catch(() => {});
+        }
+      }
+
+      player.set('currentMessageId', undefined);
     }
-
-    // Recuperar fila anterior
-    const previousSongs = await player.queue.getPrevious().catch(() => null);
-
-    if (!previousSongs || previousSongs.length === 0) {
-      console.log(`❌ Nenhuma previous queue encontrada para repetir`);
-      return;
-    }
-
-    // Repor a fila
-    await player.queue.add([...previousSongs]);
-    console.log(
-      `🔁 QueueRepeat ON — fila reiniciada (${previousSongs.length} músicas)`
-    );
-
-    await player.play();
   });
 }

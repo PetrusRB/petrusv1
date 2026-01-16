@@ -1,4 +1,13 @@
 export default {
+  category: {
+    musica: '音楽',
+    segurança: '安全',
+    utilidade: 'ユーティリティ',
+    jogos: 'ゲーム',
+    diversao: '楽しい',
+    bitcoin: 'ビットコイン',
+    admin: '管理',
+  },
   commands: {
     play: {
       name: 'play',
@@ -34,6 +43,45 @@ export default {
         tracks_added: '{{count}} 曲をキューに追加しました',
       },
     },
+    verify: {
+      name: 'verify',
+      description: '認証マネージャー',
+      errors: {
+        generic_error: '認証システムの管理中にエラーが発生しました。',
+        no_perm: 'この操作を行うための十分な権限がありません。',
+        no_dm: 'DMを送信できません。DMの受信を有効にしてください。',
+        session_expired: 'セッションの有効期限が切れました！',
+        not_enabled:
+          '認証システムが有効になっていません！/config definir category:modules chave:verification value:true を使用して認証システムを有効にしてください',
+        not_for_you: 'このセッションはあなたのものではありません！',
+        already_verified: 'すでに認証済みです',
+        invalid_channel:
+          '有効なチャンネルを指定してください。/config definir category:canais chave:verificado valor: <チャンネルIDをここに入力> を使用してチャンネルを再設定してみてください',
+
+        channel_not_exists:
+          'チャンネルが存在しません。まずは作成してみてください',
+        channel_already_exists: '設定済みのチャンネルは既に存在します',
+      },
+      dm: {
+        desc: '画像を確認し、「確認」ボタンをクリックして認証を完了してください！',
+      },
+      button: {
+        label: '認証する',
+      },
+      success: {
+        created: 'チャンネルが正常に作成されました。',
+        embed_sent: '埋め込みが正常に送信されました。',
+        dm_sent: 'DMがプライベートメッセージに送信されました',
+        delete_channel: 'チャンネルは正常に削除されました。',
+        verified: '認証が完了しました！',
+      },
+      embed: {
+        title: '認証',
+        description: 'ボタンをクリックして認証してください！',
+        button: '認証する',
+      },
+    },
+
     help: {
       name: 'help',
       description:
@@ -41,6 +89,7 @@ export default {
       errors: {
         generic_error:
           'ヘルプを表示中にエラーが発生しました。後でもう一度お試しください。',
+        failed_to_process: 'やり取りを処理できませんでした。',
         invalid_input_title: '無効な入力！',
         invalid_input_description:
           'コマンド名は最大32文字の英数字、ハイフン、またはアンダースコアのみ使用できます。',

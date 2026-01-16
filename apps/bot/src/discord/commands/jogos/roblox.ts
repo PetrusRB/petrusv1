@@ -10,6 +10,14 @@ import { RobloxClient } from '../../clients/robloxClient.js';
 
 import { z } from 'zod';
 
+interface ImageResponse {
+  data: Array<{
+    targetId: number;
+    state: 'Completed' | 'Pending' | 'Blocked';
+    imageUrl: string | null;
+  }>;
+}
+
 // API
 const schema = z.object({
   jogador: z.string({
@@ -68,13 +76,22 @@ export default createCommand({
       const aggregated = await client.aggregateUserFull(lookup.id as number, {
         concurrency: 6,
       });
+      const imageResponse = await fetch(
+        `https://thumbnails.roproxy.com/v1/users/avatar-headshot?userIds=${lookup.id}&size=48x48&format=png`
+      );
+      const imageData = (await imageResponse.json()) as ImageResponse;
+
+      // Extrair imageUrl com segurança de tipo
+      const imageUrl =
+        imageData.data[0]?.imageUrl ??
+        `https://www.roblox.com/headshot-thumbnail/image?userId=${lookup.id}&width=150&height=150`;
 
       // Criar embed
       const embed = createEmbed({
         title: `👤 ${lookup.displayName || lookup.name}`,
-        color: 0x00bcd4,
-        image: {
-          url: `https://www.roblox.com/headshot-thumbnail/image?userId=${lookup.id}&width=150&height=150`,
+        color: settings.colors.developer,
+        thumbnail: {
+          url: imageUrl,
         },
         fields: [
           { name: '🆔 ID', value: `${lookup.id}`, inline: true },

@@ -19,6 +19,7 @@ export default createCommand({
   name: 'ban',
   description: 'Banir membros da guilda: /ban alvo: @alvo motivo: Motivo Aqui.',
   type: ApplicationCommandType.ChatInput,
+  defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   options: [
     {
       name: 'alvo',

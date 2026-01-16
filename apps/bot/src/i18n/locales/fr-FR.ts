@@ -1,4 +1,13 @@
 export default {
+  category: {
+    musica: 'musique',
+    segurança: 'sécurité',
+    utilidade: 'utilitaire',
+    jogos: 'jeux',
+    diversao: 'amusant',
+    bitcoin: 'bitcoin',
+    admin: 'administrateur',
+  },
   commands: {
     play: {
       name: 'play',
@@ -37,6 +46,45 @@ export default {
         tracks_added: '{{count}} musique(s) ajoutée(s) à la file',
       },
     },
+    verify: {
+      name: 'verify',
+      description: 'Gestionnaire de vérification',
+      errors: {
+        generic_error:
+          "Une erreur s'est produite lors de la gestion du système de vérification.",
+        no_perm: "Vous n'avez pas les permissions suffisantes pour cela.",
+        no_dm:
+          "Je ne peux pas envoyer de message dans vos DM (privé). Vérifiez qu'ils sont activés pour que je puisse envoyer.",
+        session_expired: 'Session expirée !',
+        channel_not_exists:
+          "La chaîne n'existe pas. Veuillez d'abord essayer de le créer.",
+        not_enabled:
+          "Le système de vérification n'est pas activé ! Utilisez /config definir category:modules chave:verification value:true pour activer le système de vérification",
+        not_for_you: "Cette session n'est pas pour vous !",
+        already_verified: 'Déjà vérifié(e)',
+        invalid_channel:
+          'Veuillez fournir un canal valide. Essayez de redéfinir le canal en utilisant /config definir category:canais chave:verificado valor: <id_du_canal_ici>',
+        channel_already_exists: 'Le canal configuré existe déjà',
+      },
+      dm: {
+        desc: "Vérifiez l'image et cliquez sur Confirmer pour compléter votre vérification !",
+      },
+      button: {
+        label: 'Vérifier',
+      },
+      success: {
+        created: 'Canal créé avec succès.',
+        embed_sent: 'Embed envoyé avec succès.',
+        dm_sent: 'DM envoyé dans vos messages privés',
+        delete_channel: 'Chaîne supprimée avec succès !',
+        verified: 'Vérifié(e) avec succès !',
+      },
+      embed: {
+        title: 'Vérification',
+        description: 'Cliquez sur le bouton pour être vérifié !',
+        button: 'Vérifier',
+      },
+    },
     help: {
       name: 'help',
       description:
@@ -44,6 +92,8 @@ export default {
       errors: {
         generic_error:
           "Une erreur est survenue lors de l'affichage de l'aide. Veuillez réessayer plus tard.",
+        failed_to_process:
+          "Une erreur s'est produite lors du traitement de votre interaction.",
         invalid_input_title: 'Entrée invalide !',
         invalid_input_description:
           'Le nom de la commande doit contenir uniquement des lettres, des chiffres, des tirets ou des underscores, avec un maximum de 32 caractères.',

@@ -8,7 +8,7 @@ export const Footer = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6, duration: 0.6 }}
-      className="w-full max-w-7xl mt-16 pb-8"
+      className="w-full items-center content-center mt-16 pb-8"
     >
       {/* Divider */}
       <div className="w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent mb-8" />

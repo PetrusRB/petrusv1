@@ -12,7 +12,7 @@ import ky from 'ky';
 import type {
   FFPlayerSearchResponse,
   FFPlayerSearchResult,
-} from './../../types/fftypes.js';
+} from 'discord/types/fftypes.js';
 
 const API_BASE_URL = 'https://searchbynicknameapi.onrender.com';
 

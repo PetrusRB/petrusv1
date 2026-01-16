@@ -34,8 +34,15 @@ export async function bootstrap(options: BootstrapOptions) {
   options.beforeLoad?.(client);
 
   console.log('[DEBUG] Workdir usado:', options.meta.dirname);
-  await loadModules(options.meta.dirname, options.directories);
+  logger.log('[Bootstrap] Iniciando carregamento de módulos...');
 
+  try {
+    await loadModules(options.meta.dirname, options.directories);
+    logger.log('[Bootstrap] Módulos carregados com sucesso!');
+  } catch (error) {
+    logger.error('[Bootstrap] Erro ao carregar módulos:', error);
+    throw error;
+  }
   if (options.loadLogs ?? true) {
     loadLogs();
   }

@@ -1,18 +1,18 @@
-import { createResponder, ResponderType } from "#base";
-import { settings } from "#settings";
+import { createResponder, ResponderType } from '#base';
+import { settings } from '#settings';
 import {
   createEmbed,
   createModalFields,
   modalFieldsToRecord,
-} from "@magicyan/discord";
+} from '@magicyan/discord';
 import {
   fetchSkinInfo,
   fetchSkinRender,
   type FetchSkinInfoResult,
   type FetchSkinRenderResult,
   type SkinInfo,
-} from "@magicyan/minecraft";
-import { menus } from "discord/menus/index.js";
+} from '@magicyan/minecraft';
+import { menus } from 'discord/menus/index.js';
 
 // Cache mantém o objeto SkinInfo e a URL de render
 const skinResponderCache = new Map<
@@ -26,13 +26,13 @@ const skinResponderCache = new Map<
 const CACHE_TTL = 5 * 60 * 1000; // 5m
 
 createResponder({
-  customId: "mineSkins/:jogador/:action",
+  customId: 'mineSkins/:jogador/:action',
   types: [ResponderType.Button, ResponderType.ModalComponent],
-  cache: "cached",
+  cache: 'cached',
   async run(interaction, { jogador, action }): Promise<any> {
     const errorEmbed = (msg: string) =>
       createEmbed({
-        title: "Erro ao buscar skin",
+        title: 'Erro ao buscar skin',
         description: `${settings.emojis.static.failed} ${msg}`,
         color: settings.colors.danger,
       });
@@ -46,25 +46,25 @@ createResponder({
         return cached;
       }
 
-      // 1) Fetch info
+      // fetch info
       const infoRes: FetchSkinInfoResult = await fetchSkinInfo(player);
       if (!infoRes.success) {
         throw new Error(
-          infoRes.error?.includes("not found")
-            ? "Jogador não encontrado"
-            : "Falha ao buscar informações da skin",
+          infoRes.error?.includes('not found')
+            ? 'Jogador não encontrado'
+            : 'Falha ao buscar informações da skin'
         );
       }
       const info = infoRes.data as SkinInfo;
 
-      // 2) Fetch render
+      // fetch render
       const renderRes: FetchSkinRenderResult = await fetchSkinRender(player);
       if (!renderRes.success || !renderRes.data) {
-        throw new Error("Falha ao buscar imagem da skin");
+        throw new Error('Falha ao buscar imagem da skin');
       }
-      const renderUrl = renderRes.data.buffer.toString("base64");
+      const renderUrl = renderRes.data.buffer.toString('base64');
 
-      // 3) Cacheia
+      // Cacheia
       const entry = { info, renderUrl, expiresAt: now + CACHE_TTL };
       skinResponderCache.set(key, entry);
       return entry;
@@ -81,8 +81,8 @@ createResponder({
         // Passa SkinInfo e string URL
         await interaction.editReply(menus.skinMenu(info, renderUrl));
       } catch (err: any) {
-        console.error("[mineSkins]", err);
-        const embed = errorEmbed(err.message || "Erro inesperado");
+        console.error('[mineSkins]', err);
+        const embed = errorEmbed(err.message || 'Erro inesperado');
         if (interaction.deferred || interaction.replied) {
           await interaction.editReply({ embeds: [embed] });
         } else {
@@ -94,14 +94,14 @@ createResponder({
     // Se veio do modal
     if (interaction.isModalSubmit()) {
       await interaction.deferUpdate();
-      const fields = modalFieldsToRecord<"jogador">(interaction.fields);
-      const name = fields.jogador?.trim() ?? "";
+      const fields = modalFieldsToRecord<'jogador'>(interaction.fields);
+      const name = fields.jogador?.trim() ?? '';
 
       if (!/^[\w\d_]{3,16}$/.test(name)) {
         return interaction.editReply({
           embeds: [
             createEmbed({
-              title: "Nome inválido",
+              title: 'Nome inválido',
               description: `${settings.emojis.static.failed} Use 3–16 caracteres: letras, números ou underscore.`,
               color: settings.colors.danger,
             }),
@@ -113,18 +113,18 @@ createResponder({
 
     // Se veio de botão
     switch (action) {
-      case "refresh":
+      case 'refresh':
         await interaction.deferUpdate();
         return displaySkin(jogador);
 
-      case "search":
+      case 'search':
         return interaction.showModal({
           customId: interaction.customId,
-          title: "Pesquisar jogador",
+          title: 'Pesquisar jogador',
           components: createModalFields({
             jogador: {
-              label: "Nome do jogador",
-              placeholder: "Ex: Notch",
+              label: 'Nome do jogador',
+              placeholder: 'Ex: Notch',
               required: true,
               minLength: 3,
               maxLength: 16,

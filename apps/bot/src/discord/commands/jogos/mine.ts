@@ -29,13 +29,9 @@ export default createCommand({
     },
   ],
   async run(interaction): Promise<any> {
-    const { options, guild } = interaction;
+    const { options } = interaction;
     const type = options.getString('tipo', true);
     const ip = options.getString('ip', true);
-    const guildId = guild.id;
-
-    const currentGuildDB = await db.guilds.get(guildId);
-    const memberrole = currentGuildDB?.cargos?.membro;
 
     if (!ip && !type) {
       return interaction.reply({
@@ -48,17 +44,6 @@ export default createCommand({
     await interaction.editReply({
       content: `${settings.emojis.anim.loading} Carregando...`,
     });
-
-    if (!memberrole) {
-      return interaction.editReply({
-        content: `${settings.emojis.static.failed} O cargo de **membro** não está configurado. Use /config membro <cargo> para configurar.`,
-      });
-    }
-    if (!interaction.member.roles.cache.has(memberrole)) {
-      return interaction.editReply({
-        content: `${settings.emojis.static.failed} Você não tem permissão para usar este comando.`,
-      });
-    }
 
     const server = await fetchServerStatus(
       ip,

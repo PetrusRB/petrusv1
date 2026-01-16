@@ -1,7 +1,13 @@
 import { createCommand } from '#base';
 import { logger, settings } from '#settings';
 import { createEmbed, createEmbedAuthor } from '@magicyan/discord';
-import { GuildMember } from 'discord.js';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChatInputCommandInteraction,
+  GuildMember,
+} from 'discord.js';
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
@@ -10,6 +16,7 @@ import { formatDuration } from 'discord/utils/duration.js';
 import { z } from 'zod';
 import { t, getLocale } from 'i18n/index.js';
 import { LoadTypes, Player, StateTypes } from 'magmastream';
+import { createMusicButtons } from 'discord/responders/music/music.res.ts';
 
 // ─────────────────────────────────────────
 // Schema para validação
@@ -26,7 +33,7 @@ const schema = z.object({
     .optional(),
 });
 
-const musicChoices = ['spotify', 'tidal', 'soundcloud'] as const;
+const musicChoices = ['spotify', 'youtube'] as const;
 
 export default createCommand({
   name: 'play',
@@ -198,10 +205,17 @@ export default createCommand({
           const queueWasEmpty = player.queue.size.length === 0;
           const wasPlaying = player.playing;
           player.queue.add(track);
+
           // Toca a musica se a queue estiver vazia
           if (queueWasEmpty && !wasPlaying) {
             await player.play();
             const queueSize = await player.queue.size();
+            const buttons = await createMusicButtons(
+              interaction.user.id,
+              player,
+              locale
+            );
+
             const embed = createEmbed({
               color: settings.colors.primary,
               author: createEmbedAuthor(interaction.user),
@@ -236,10 +250,22 @@ export default createCommand({
               },
               timestamp: new Date(),
             });
-            return interaction.editReply({ embeds: [embed] });
+            const message = await interaction.editReply({
+              embeds: [embed],
+              components: buttons,
+            });
+            if (message && 'id' in message) {
+              player.set('currentMessageId', message.id);
+            }
+            return message;
           }
 
           // Caso já esteja tocando → apenas adicionada à fila
+          const buttons = await createMusicButtons(
+            interaction.user.id,
+            player,
+            locale
+          );
           const embedQueued = createEmbed({
             color: settings.colors.primary,
             author: createEmbedAuthor(interaction.user),
@@ -270,7 +296,14 @@ export default createCommand({
             timestamp: new Date(),
           });
 
-          return interaction.editReply({ embeds: [embedQueued] });
+          const message = await interaction.editReply({
+            embeds: [embedQueued],
+            components: buttons,
+          });
+          if (message && 'id' in message) {
+            player.set('currentMessageId', message.id);
+          }
+          return message;
         case LoadTypes.Playlist:
           const playlist = result.playlist;
           const tracks = playlist?.tracks || result.tracks;
@@ -279,6 +312,15 @@ export default createCommand({
               content: `${settings.emojis.static.failed} - Playlist vazia.`,
             });
           }
+          const playerListButtons = await createMusicButtons(
+            interaction.user.id,
+            player,
+            locale
+          );
+          await interaction.editReply({
+            content: `${settings.emojis.static.kagamine} Playlist adicionada`,
+            components: playerListButtons,
+          });
 
           // Verificar estado da fila ANTES de adicionar
           const queueWasEmptyPl = player.queue.size.length === 0;
@@ -291,9 +333,8 @@ export default createCommand({
           const embedPlaylist = createEmbed({
             color: settings.colors.primary,
             author: createEmbedAuthor(interaction.user),
-            title: `${settings.emojis.static.daftpunk} Playlist adicionada`,
+            title: `${settings.emojis.static.kagamine} Playlist adicionada`,
             description: `${result.tracks.length} músicas adicionadas à fila`,
-
             fields: [],
             footer: {
               text: `${t(locale, 'commands.play.fields.requested_by', {
@@ -302,9 +343,15 @@ export default createCommand({
             },
             timestamp: new Date(),
           });
-          await interaction.editReply({ embeds: [embedPlaylist] });
 
-          break;
+          const messagePlaylist = await interaction.editReply({
+            embeds: [embedPlaylist],
+            components: playerListButtons,
+          });
+          if (messagePlaylist && 'id' in messagePlaylist) {
+            player.set('currentMessageId', messagePlaylist.id);
+          }
+          return messagePlaylist;
       }
     } catch (error) {
       logger.error('Erro ao tocar música:', error);

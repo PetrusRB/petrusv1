@@ -7,6 +7,7 @@ import {
   setupMusicManager,
 } from 'discord/managers/music/music.manager.js';
 import { logger } from '#settings';
+import { isVoiceChannelEmpty } from 'discord/utils/voicechannel.ts';
 
 const info = getInfo();
 await bootstrap({
@@ -18,6 +19,7 @@ await bootstrap({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildVoiceStates,
   ],
   directories: ['discord'],
@@ -30,6 +32,16 @@ await bootstrap({
       string,
       { tracks: any[]; expires: number; guildId?: string; userId?: string }
     >();
+    c.on('voiceStateUpdate', (oldState) => {
+      const player = manager.players.get(oldState.guild.id);
+      if (!player) return;
+      if (isVoiceChannelEmpty(c, player)) {
+        logger.log(
+          '[MusicClient] Não tem ninguém no canal de voz, terminando a música..'
+        );
+        player?.destroy();
+      }
+    });
 
     c.on('raw', (packet: any) => {
       if (['VOICE_STATE_UPDATE', 'VOICE_SERVER_UPDATE'].includes(packet.t)) {
@@ -41,7 +53,12 @@ await bootstrap({
   },
 
   async whenReady(c) {
-    initializeMusicManager(c);
-    console.log(`Cluster ${info.CLUSTER} → pronto como ${c.user?.username}`);
+    try {
+      initializeMusicManager(c);
+      logger.log(`[Cluster ${info.CLUSTER}] Pronto como ${c.user?.username}`);
+    } catch (error) {
+      logger.error('[Cluster] Erro ao inicializar music manager:', error);
+      throw error;
+    }
   },
 });

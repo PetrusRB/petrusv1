@@ -9,7 +9,7 @@ import {
 import { z } from 'zod';
 import ky from 'ky';
 
-import type { FFPlayerData } from './../../types/fftypes.js'; // ajusta o caminho conforme seu projeto
+import type { FFPlayerData } from 'discord/types/fftypes.js';
 
 const API_BASE_URL = 'https://info-ob49.vercel.app';
 

@@ -1,0 +1,17 @@
+Quando o usuário clicar no butão de verificação vai:
+1. Abrir uma modal mostrando as informações do que colocar
+3. Gerar um código captcha.
+2. Ao digitar o código gerado corretamente vai verificar o usuário -> adicionar cargo membro e remover o cargo não verificado.
+
+O sistema vai (Quando entra):
+1. Verificar se o usuário já tem o cargo de não verificado, se não, então vai adiciona-lo ao membro
+
+Arquitetura do sistema de verificação:
+
+Responder para o usuário poder verificar usando botão -> verify.responder.ts.
+Módulo de verificação -> verify.module.ts 
+Comando de verificação -> segurança/verify.ts 
+Captcha usando canvas -> utils/captcha.ts
+Interface para o sistema de módulo dinamico -> module.interface.ts
+Schema de verificação por sessão -> verification.ts no schemas
+

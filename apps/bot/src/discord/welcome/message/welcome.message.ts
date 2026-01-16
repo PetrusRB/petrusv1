@@ -2,6 +2,7 @@ import { db } from '#database';
 import { EmbedBuilder, GuildMember, TextChannel } from 'discord.js';
 import { logger } from '#settings';
 import { settings } from '#settings';
+import { generateWelcome } from 'discord/utils/welcome.ts';
 type Perm = 'ViewChannel' | 'SendMessages' | 'EmbedLinks';
 
 async function checkChannelPerms(channel: TextChannel, permsToCheck: Perm[]) {
@@ -73,21 +74,21 @@ export const SendWelcomeMessage = async (member: GuildMember) => {
       logger.error`Canal de regras ${regrasID} não encontrado ou não é de texto no servidor ${member.guild.name}`;
       return;
     }
-    const embed = new EmbedBuilder()
-      .setColor('Yellow')
-      .setTitle(
-        `${settings.emojis.static.wave} Bem-vindo(a) a nossa comunidade!`
-      )
-      .setDescription(
-        `Olá ${member}, seja muito bem-vindo(a) ao **${member.guild.name}**!\n\n` +
-          `Confira as regras em ${regrasChannel.id || '#regras'}`
-      )
-      .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
-      .setTimestamp();
+
+    const buffer = await generateWelcome(
+      `${member.user.tag}`,
+      guildConfig?.welcome.welcomeMessage ?? settings.default_welcome_message,
+      {
+        backgroundImage:
+          guildConfig.welcome.backgroundImage ??
+          settings.default_welcome_background,
+        avatar: member.user.avatarURL() ?? settings.default_welcome_avatar,
+        borderGradient: ['#000000', '#ffda35'],
+      }
+    );
 
     await channel.send({
-      content: `${member}`,
-      embeds: [embed],
+      files: [buffer],
     });
 
     logger.success`Mensagem de boas-vindas enviada para ${member.user.tag}`;
