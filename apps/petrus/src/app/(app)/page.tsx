@@ -1,3 +1,4 @@
+'use client';
 import { Hero } from '@/components/ui/hero';
 import { Features } from '@/components/ui/features';
 import { CardSuporte } from '@/components/ui/suporte/cardsuporte';

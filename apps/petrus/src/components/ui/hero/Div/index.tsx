@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 export const HeroDiv = ({ children }: { children: ReactNode }) => {
   return (

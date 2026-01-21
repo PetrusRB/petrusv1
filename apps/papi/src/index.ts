@@ -20,4 +20,4 @@ app.onError(errorHandler);
 serve({
   fetch: app.fetch,
   port: 3001,
-});
+}).on('listening', () => console.log('[Server]: Ligado com sucesso (backend)'));

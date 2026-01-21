@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 
 import GlobalClientWrapper from '@/providers/GlobalClientWrapper';
 import { Footer } from '@/components/ui/footer';
+import { AuthProvider } from '@/context/auth.context';
 export const metadata = {
   title: 'Petrus ',
   description: 'A discord bot.',
@@ -20,11 +21,13 @@ export default async function RootLayout({
     <html suppressHydrationWarning lang="pt-BR" data-theme={theme}>
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <body>
-        <Header />
-        {/* Espaço para compensar a navbar fixa */}
-        <div className="h-[88px]" aria-hidden="true" />
-        <GlobalClientWrapper>{children}</GlobalClientWrapper>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          {/* Espaço para compensar a navbar fixa */}
+          <div className="h-[88px]" aria-hidden="true" />
+          <GlobalClientWrapper>{children}</GlobalClientWrapper>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

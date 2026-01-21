@@ -5,14 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "start": "pm2 start build/index.js --name papi -i 1",
-    "stop": "pm2 stop papi",
-    "restart": "pm2 restart papi",
-    "logs": "pm2 logs papi",
-    "reset": "pm2 delete all && pm2 save"
-  },
-  "nx": {
-    "name": "papi"
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "prod": "npm run build && node build/index.js"
   },
   "dependencies": {
     "chalk": "5.4.1",

@@ -3,10 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { Menu, X, Bot, Book, LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '@/components/ui/button/Button';
 import { ThemeToggle } from '@/components/ui/themeToggle';
 import Image from 'next/image';
+import { Avatar } from '../Avatar';
+import { useAuth } from '@/context/auth.context';
 
 const NAV_ITEMS = [
   {
@@ -35,6 +37,7 @@ const NAV_ITEMS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const { isAuthenticated } = useAuth();
   const navigate = useRouter();
   const pathName = usePathname();
 
@@ -110,9 +113,7 @@ export default function Navbar() {
                   </motion.div>
                 );
               })}
-              <div className="ml-2">
-                <ThemeToggle />
-              </div>
+              <div className="ml-2">{isAuthenticated && <Avatar />}</div>
             </div>
 
             {/* Mobile Menu Button */}

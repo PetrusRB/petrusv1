@@ -1,9 +1,9 @@
 'use client';
-
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button/Button';
 import { ArrowRight, Plus } from 'lucide-react';
+import { OnlyAuth } from '@/components/helper/OnlyAuth';
 
 export function HeroAnimation() {
   return (
@@ -89,20 +89,39 @@ export function HeroAnimation() {
             </motion.span>
           </a>
         </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full sm:w-auto group"
-          asChild
+        <OnlyAuth
+          fallback={
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-auto group"
+              asChild
+            >
+              <a className="flex items-center gap-2">
+                Entrar com discord
+                <ArrowRight
+                  size={20}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </a>
+            </Button>
+          }
         >
-          <a href="/dashboard" className="flex items-center gap-2">
-            Dashboard
-            <ArrowRight
-              size={20}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </a>
-        </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto group"
+            asChild
+          >
+            <a href="/dashboard" className="flex items-center gap-2">
+              Dashboard
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </a>
+          </Button>
+        </OnlyAuth>
       </motion.div>
     </>
   );

@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "next dev"
   },
-  "nx": {
-    "name": "petrus"
-  },
   "dependencies": {
+    "@clerk/nextjs": "^6.36.8",
+    "@peterrb/papi": "*",
     "next": "~15.2.8",
     "react": "19.0.0",
     "react-dom": "19.0.0"
