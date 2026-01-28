@@ -7,6 +7,7 @@ import {
   MAGMA_LOOP_MODES,
   MagmaLoopMode,
 } from 'discord/commands/musica/loop.ts';
+import { createEmbed } from '@magicyan/discord';
 
 // Função auxiliar para criar os botões dinamicamente
 export async function createMusicButtons(

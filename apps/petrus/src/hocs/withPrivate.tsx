@@ -3,6 +3,7 @@ import { ComponentType, useEffect, JSX } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth.context';
 import { LoadingOverlay } from '@/components/ui/loading';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export function withPrivate<T>(Component: ComponentType<T>) {
   return (props: T) => {
@@ -15,11 +16,11 @@ export function withPrivate<T>(Component: ComponentType<T>) {
       }
     }, [isAuthenticated, isLoading, router]);
 
-    if (!isAuthenticated)
+    if (!isAuthenticated && !isLoading)
       return (
         <h1 className="text-center font-bold text-1xl">Você não esta logado</h1>
       );
-    if (isLoading) return <LoadingOverlay />;
+    if (isLoading) return <Skeleton variant="card" className="w-64" />;
 
     return <Component {...(props as unknown as T & JSX.IntrinsicAttributes)} />;
   };

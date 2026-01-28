@@ -7,8 +7,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '@/components/ui/button/Button';
 import { ThemeToggle } from '@/components/ui/themeToggle';
 import Image from 'next/image';
-import { Avatar } from '../Avatar';
 import { useAuth } from '@/context/auth.context';
+import { SignedIn, SignedOut, useClerk } from '@clerk/nextjs';
+import { Dropdown } from '../Dropdown';
+import { Skeleton } from '../Skeleton';
 
 const NAV_ITEMS = [
   {
@@ -25,19 +27,13 @@ const NAV_ITEMS = [
     external: false,
     highlight: false,
   },
-  {
-    label: 'Dashboard',
-    href: '/dashboard',
-    icon: LogIn,
-    external: false,
-    highlight: true,
-  },
 ] as const;
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, signIn, user } = useAuth();
+  const { signOut } = useClerk();
   const navigate = useRouter();
   const pathName = usePathname();
 
@@ -47,7 +43,6 @@ export default function Navbar() {
   }, []);
 
   const toggleMenu = useCallback(() => setIsOpen((prev) => !prev), []);
-
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
@@ -113,7 +108,54 @@ export default function Navbar() {
                   </motion.div>
                 );
               })}
-              <div className="ml-2">{isAuthenticated && <Avatar />}</div>
+              <SignedOut>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant={'ghost'}
+                    size="sm"
+                    onClick={() => signIn()}
+                    className="gap-2"
+                  >
+                    <LogIn size={16} />
+                    Entrar com Discord
+                  </Button>
+                </motion.div>
+              </SignedOut>
+              {/* <SignedIn>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant={'default'}
+                    size="sm"
+                    onClick={() => handleNavClick('/dashboard', false)}
+                    className="gap-2"
+                  >
+                    <LogIn size={16} />
+                    Dashboard
+                  </Button>
+                </motion.div>
+              </SignedIn> */}
+              <div className="ml-2">
+                <SignedOut>
+                  <Skeleton variant="avatar" className="h-10 w-10" />
+                </SignedOut>
+                <SignedIn>
+                  <Dropdown.Avatar
+                    onLogout={() => signOut()}
+                    onDashboard={() => handleNavClick('/dashboard', false)}
+                    user={{
+                      name: user?.displayName ?? '',
+                      avatar: user?.pictureUrl ?? '',
+                      isPremium: false,
+                    }}
+                  />
+                </SignedIn>
+              </div>
             </div>
 
             {/* Mobile Menu Button */}

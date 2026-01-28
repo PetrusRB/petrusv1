@@ -107,7 +107,7 @@ export const FeaturesComponent = () => {
               key={index}
               variants={itemVariants}
               whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-              className="bg-card rounded-2xl p-6 border border-primary/50 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-glow)] transition-all duration-300"
+              className="bg-card rounded-2xl p-6 border border-primary/50 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-glow)] transition-all duration-200"
             >
               <div className="bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
                 <Icon className="text-primary" size={24} />

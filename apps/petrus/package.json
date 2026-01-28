@@ -6,10 +6,13 @@
     "dev": "next dev"
   },
   "dependencies": {
+    "@arcjet/next": "^1.0.0-beta.17",
     "@clerk/nextjs": "^6.36.8",
+    "@hono/zod-validator": "^0.7.6",
     "@peterrb/papi": "*",
     "next": "~15.2.8",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "rough-notation": "^0.5.1"
   }
 }

@@ -1,6 +1,12 @@
 import { db } from '#database';
 import { logger, settings } from '#settings';
-import { Guild, GuildMember, GuildTextBasedChannel, Role } from 'discord.js';
+import {
+  Guild,
+  GuildMember,
+  GuildTextBasedChannel,
+  Message,
+  Role,
+} from 'discord.js';
 import { ModuleBase } from 'discord/interfaces/module.interface.ts';
 type VerificationConfig = {
   enabled: boolean;
@@ -17,6 +23,9 @@ export class Verification implements ModuleBase {
   public constructor() {
     this.startWatcher(); // ativa o auto-reload uma única vez
   }
+
+  init?: (() => Promise<void> | void) | undefined;
+  reload?: ((guildId: string) => Promise<void>) | undefined;
 
   private startWatcher() {
     if (Verification.watching) return;
@@ -113,7 +122,7 @@ export class Verification implements ModuleBase {
       errors.push('Cargo de não verificado não configurado');
     }
     if (!config.memberRole) {
-      errors.push('Cargo `cargos.naoverificado` não configurado.');
+      errors.push('Cargo `cargos.member` não configurado.');
     }
     if (!config.rulesChannel) {
       errors.push('Cargo `canais.regras` não configurado!');
@@ -153,6 +162,12 @@ export class Verification implements ModuleBase {
   public isUnverified(member: GuildMember, roleId?: string) {
     return roleId ? member.roles.cache.has(roleId) : false;
   }
+
+  /**
+   * Gerenciar mensagems
+   */
+
+  public async handleMessage(message: Message) {}
 
   /**
    * Marca membro como não verificado

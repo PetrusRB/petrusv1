@@ -1,6 +1,6 @@
 import { createEvent } from '#base';
 import { db } from '#database';
-import { logger } from '#settings';
+import { logger, settings } from '#settings';
 import { GuildMember } from 'discord.js';
 import { Verification } from 'discord/modules/verification/verify.module.ts';
 import { SendWelcomeMessage } from 'discord/welcome/message/welcome.message.js';
@@ -8,9 +8,14 @@ import { AddWelcomeRole } from 'discord/welcome/role/welcome.role.js';
 
 const verificationLogic = async (
   member: GuildMember,
-  guildData: any
+  guildData: any,
+  isBot: boolean
 ): Promise<void> => {
   try {
+    if (isBot) {
+      logger.log(`[Verification] Bot detectado, ignorando...`);
+      return;
+    }
     logger.log(`[Verification] Iniciando verificação para ${member.user.tag}`);
 
     // Verifica se o módulo está ativado
@@ -109,9 +114,14 @@ const verificationLogic = async (
 
 const welcomeLogic = async (
   member: GuildMember,
-  guildData: any
+  guildData: any,
+  isBot: boolean
 ): Promise<void> => {
   try {
+    if (isBot) {
+      logger.log(`[Welcome] Bot detectado, ignorando...`);
+      return;
+    }
     if (member.user.id === member.client.user.id) {
       logger.log(`[Welcome] O novo membro é o petrus, ignorando...`);
       return;
@@ -137,6 +147,28 @@ const welcomeLogic = async (
   }
 };
 
+const blacklistLogic = async (member: GuildMember, guildData: any) => {
+  try {
+    if (member.user.id === member.client.user.id) {
+      logger.log(`[Welcome] O novo membro é o petrus, ignorando...`);
+      return;
+    }
+    var memberOnBlacklist = guildData.blacklist.users.includes(member.user.id);
+    if (memberOnBlacklist) {
+      if (member.dmChannel?.isSendable()) {
+        member.dmChannel.send({
+          content: `${settings.emojis.static.failed} - Você foi chutado pra rua porque tá na blacklist! 😭 (Tipo, nem o capeta te quer mais na lista VIP!)`,
+        });
+      }
+      member.kick(
+        'Você foi chutado pra rua porque tá na blacklist! 😭 (Tipo, nem o capeta te quer mais na lista VIP!)'
+      );
+    }
+  } catch (error) {
+    logger.error(`[Blacklist] Erro na lógica de blacklist:`, error);
+  }
+};
+
 createEvent({
   name: 'Join Handler',
   event: 'guildMemberAdd',
@@ -145,16 +177,13 @@ createEvent({
       logger.log(`[JoinHandler] 🔔 Evento disparado para ${member.user.tag}`);
 
       // Ignora bots
-      if (member.user.bot) {
-        logger.log(`[JoinHandler] Bot detectado, ignorando...`);
-        return;
-      }
       const guildData = await db.guilds.get(member.guild.id);
 
       // chama as funções lógicas.
       await Promise.allSettled([
-        verificationLogic(member, guildData),
-        welcomeLogic(member, guildData),
+        verificationLogic(member, guildData, member.user.bot),
+        welcomeLogic(member, guildData, member.user.bot),
+        blacklistLogic(member, guildData),
       ]);
 
       logger.log(

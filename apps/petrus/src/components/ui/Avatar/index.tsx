@@ -1,14 +1,16 @@
 import { Button } from '@/components/ui/button/Button';
+import { cn } from '@/lib/utils';
 export type AvatarType = {
   onClick?: () => void;
+  className?: string;
   src?: string;
 };
-export const Avatar = ({ onClick, src }: AvatarType) => {
+export const Avatar = ({ onClick, src, className }: AvatarType) => {
   return (
     <Button
       variant="default"
       size="icon"
-      className="rounded-full w-10 h-10"
+      className={cn('rounded-full w-10 h-10', className)}
       aria-label="Toggle theme"
     >
       {src ? (

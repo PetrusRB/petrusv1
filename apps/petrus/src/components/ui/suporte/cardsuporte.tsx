@@ -3,8 +3,11 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '../card';
 import { Users } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Button } from '../button/Button';
 
 export const CardSuporte = () => {
+  const navigate = useRouter();
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -38,17 +41,24 @@ export const CardSuporte = () => {
             Entre no nosso servidor do Discord para suporte, sugestões ou apenas
             para conversar!
           </p>
-          <motion.a
-            href={process.env.NEXT_PUBLIC_SUPPORT_LINK || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl shadow-primary/20"
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-5 text-center"
           >
-            <Users className="w-5 h-5" />
-            Entrar no Discord
-          </motion.a>
+            <Button
+              onClick={() =>
+                navigate.push(`${process.env.NEXT_PUBLIC_SUPPORT_LINK ?? '#'}`)
+              }
+              size="lg"
+              className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
+            >
+              <Users className="h-5 w-5 mr-2" />
+              Entrar no Discord
+            </Button>
+          </motion.div>
         </CardContent>
       </Card>
     </motion.div>

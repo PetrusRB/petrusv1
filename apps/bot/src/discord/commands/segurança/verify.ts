@@ -8,7 +8,7 @@ import {
   PermissionFlagsBits,
   TextChannel,
 } from 'discord.js';
-import { db } from '#database';
+import { db, repos } from '#database';
 import { getLocale, t } from 'i18n/index.ts';
 import { ButtonBuilder, ActionRowBuilder } from 'discord.js';
 import { Locale } from 'discord.js';
@@ -49,9 +49,10 @@ export default createCommand({
     await interaction.deferReply({ ephemeral: true });
     const locale = getLocale(interaction.locale);
     const sub = interaction.options.getSubcommand();
+    const guildId = interaction.guild.id;
 
     // Carrega a guild do banco uma única vez
-    const guildData = await db.guilds.get(interaction.guild.id);
+    const guildData = await repos.guild.getById(guildId);
 
     switch (sub) {
       case 'create-channel':
@@ -120,13 +121,11 @@ async function handleCreateChannel(
   });
 
   // Atualiza apenas os campos necessários
-  const updateData: any = {
+  await repos.guild.set(interaction.guild.id, {
     'canais.verificado': created.id,
     'verification.guildId': interaction.guild.id,
     'verification.channelId': created.id,
-  };
-
-  await db.guilds.updateOne({ _id: guildData._id }, { $set: updateData });
+  } as any);
 
   return interaction.editReply(
     res.success(
@@ -179,13 +178,11 @@ async function handleDeleteChannel(
     guildData.verification?.messageId;
 
   if (needsUpdate) {
-    const updateData: any = {
+    await repos.guild.set(interaction.guild.id, {
       'canais.verificado': '',
       'verification.channelId': '',
       'verification.messageId': '',
-    };
-
-    await db.guilds.updateOne({ _id: guildData._id }, { $set: updateData });
+    } as any);
   }
 
   return interaction.editReply({
@@ -256,13 +253,11 @@ async function handleSendEmbed(
     guildData.verification?.guildId !== interaction.guild.id;
 
   if (needsUpdate) {
-    const updateData: any = {
+    await repos.guild.set(interaction.guild.id, {
       'verification.guildId': interaction.guild.id,
       'verification.channelId': channel.id,
       'verification.messageId': msg.id,
-    };
-
-    await db.guilds.updateOne({ _id: guildData._id }, { $set: updateData });
+    } as any);
   }
 
   return interaction.editReply({

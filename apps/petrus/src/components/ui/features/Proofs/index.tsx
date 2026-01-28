@@ -134,26 +134,29 @@ export const ProofSection = () => {
                   >
                     <div className="relative w-full rounded-2xl overflow-hidden border-2 border-primary/30 bg-card shadow-2xl">
                       <Carousel className="relative w-full">
-                        <CarouselContent className="w-full">
+                        <CarouselContent className="-ml-0">
                           {proof.image.map((img, i) => (
-                            <CarouselItem key={i} className="relative w-full">
+                            <CarouselItem key={i} className="pl-0">
                               {/* Aspect wrapper garante altura proporcional */}
-                              <div className="relative aspect-video w-full">
+                              <div className="relative aspect-[16/10] w-full bg-muted/50">
                                 <Image
                                   src={img}
                                   alt={proof.title}
                                   fill
-                                  className="object-contain"
-                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                  className="object-contain p-2"
+                                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 700px"
                                   priority={i === 0}
                                 />
                               </div>
                             </CarouselItem>
                           ))}
                         </CarouselContent>
-
-                        <CarouselPrevious className="left-2 top-1/2 -translate-y-1/2 z-20" />
-                        <CarouselNext className="right-2 top-1/2 -translate-y-1/2 z-20" />
+                        {proof.image.length > 1 && (
+                          <>
+                            <CarouselPrevious className="left-2 top-1/2 -translate-y-1/2 z-20" />
+                            <CarouselNext className="right-2 top-1/2 -translate-y-1/2 z-20" />
+                          </>
+                        )}
                       </Carousel>
 
                       {/* Gradient overlay */}

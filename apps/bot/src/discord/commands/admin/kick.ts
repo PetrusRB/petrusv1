@@ -42,11 +42,7 @@ export default createCommand({
       });
       return;
     }
-    if (
-      !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator) &&
-      !interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers) &&
-      !interaction.memberPermissions?.has(PermissionFlagsBits.KickMembers)
-    ) {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.KickMembers)) {
       interaction.editReply({
         content: `${settings.emojis.static.failed} Você não tem permissão para usar este comando.`,
       });
@@ -137,4 +133,3 @@ export default createCommand({
     }
   },
 });
-

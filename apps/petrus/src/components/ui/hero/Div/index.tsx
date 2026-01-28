@@ -11,7 +11,7 @@ export const HeroDiv = ({ children }: { children: ReactNode }) => {
         opacity: { duration: 0.6 },
         scale: { duration: 0.6 },
       }}
-      className="w-full max-w-7xl py-12 sm:py-16 mx-auto"
+      className="w-full max-w-7xl mx-auto"
       aria-label="Home screen content"
     >
       {children}

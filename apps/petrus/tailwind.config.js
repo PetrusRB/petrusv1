@@ -13,7 +13,7 @@ module.exports = {
       colors: {
         // 🎨 Tema gostozin
         primary: {
-          DEFAULT: '#fbe72b', // verde limpo
+          DEFAULT: '#fbe72b',
           dark: '#bcab0d',
           light: '#86EFAC',
         },
@@ -31,7 +31,7 @@ module.exports = {
         },
         background: {
           light: '#FFFFFF',
-          dark: '#0B0B0F',
+          dark: '#141414',
         },
         text: {
           light: '#181818',

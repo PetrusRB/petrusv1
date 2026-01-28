@@ -7,14 +7,15 @@ import {
   GuildMember,
   Guild,
 } from 'discord.js';
-import { db } from '#database';
+import { repos } from '#database';
 import { z } from 'zod';
 import { createEmbed } from '@magicyan/discord';
 import { Verification } from 'discord/modules/verification/verify.module.ts';
 import { moduleManager } from 'discord/managers/modules/module.manager.ts';
+import { Moderation } from 'discord/modules/moderation/moderation.module.ts';
 
 // Tipos para metadados
-type ConfigType = 'role' | 'module' | 'channel' | 'text' | 'boolean';
+type ConfigType = 'role' | 'module' | 'channel' | 'text' | 'boolean' | 'array';
 type ModuleHandler = {
   onEnable?: (ctx: {
     guild: Guild;
@@ -40,6 +41,7 @@ type ConfigMetadata = {
   };
 };
 const verification = new Verification();
+const moderation = new Moderation();
 
 // Metadados de configuração
 const configMetadata: ConfigMetadata = {
@@ -69,6 +71,17 @@ const configMetadata: ConfigMetadata = {
       checkHierarchy: false,
     },
   },
+  blacklist: {
+    users: {
+      type: 'array',
+      description:
+        'Usuários na blacklist\n' +
+        '• `id1,id2` → substitui\n' +
+        '• `+id` → adiciona\n' +
+        '• `-id` → remove\n' +
+        '• `[id1,id2]` → JSON',
+    },
+  },
   modules: {
     verification: {
       type: 'boolean',
@@ -79,6 +92,18 @@ const configMetadata: ConfigMetadata = {
         },
         async onDisable({ guild }) {
           await verification.disable(guild);
+        },
+      },
+    },
+    moderation: {
+      type: 'boolean',
+      description: 'Modulo de moderação',
+      moduleHandler: {
+        async onEnable({ guild, bot, member }) {
+          await moderation.setup(guild, bot, member);
+        },
+        async onDisable({ guild }) {
+          await moderation.disable(guild);
         },
       },
     },
@@ -93,6 +118,12 @@ const configMetadata: ConfigMetadata = {
     membro: {
       type: 'role',
       description: 'Cargo dado automaticamente ao entrar',
+      checkManaged: true,
+      checkHierarchy: true,
+    },
+    admin: {
+      type: 'role',
+      description: 'Cargo de administrador do servidor',
       checkManaged: true,
       checkHierarchy: true,
     },
@@ -155,6 +186,61 @@ const configSchema = z
     }
   });
 
+function parseArrayValue(raw: string): {
+  mode: 'set' | 'add' | 'remove';
+  items: string[];
+} {
+  raw = raw.trim();
+
+  // add prefix '+' -> add
+  if (raw.startsWith('+')) {
+    const content = raw.slice(1).trim();
+    const items = content.length
+      ? content
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    return { mode: 'add', items };
+  }
+
+  // remove prefix '-' -> remove
+  if (raw.startsWith('-')) {
+    const content = raw.slice(1).trim();
+    const items = content.length
+      ? content
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    return { mode: 'remove', items };
+  }
+
+  // JSON array -> set
+  if (raw.startsWith('[') && raw.endsWith(']')) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        const items = parsed.map((i) => String(i).trim()).filter(Boolean);
+        return { mode: 'set', items };
+      }
+    } catch (e) {
+      // cairá para tentativa de split abaixo
+    }
+  }
+
+  // comma separated -> set
+  if (raw.includes(',')) {
+    const items = raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return { mode: 'set', items };
+  }
+
+  // single item -> set single
+  return { mode: 'set', items: [raw] };
+}
 // função de validação baseada em metadados
 async function validateConfig(
   guild: any,
@@ -244,6 +330,28 @@ async function validateConfig(
     ) {
       warnings.push(
         `O cargo ${role} está acima ou no mesmo nível do meu cargo mais alto.\nMova meu cargo para uma posição superior para que eu possa gerenciá-lo.`
+      );
+    }
+  }
+  const isSnowflake = (id: string) => /^\d{17,20}$/.test(id);
+  // Validação de ARRAY
+  if (metadata.type === 'array') {
+    const { items } = parseArrayValue(value);
+
+    if (!items.length) {
+      return {
+        valid: false,
+        errors: ['Nenhum item válido encontrado para o array.'],
+      };
+    }
+
+    const invalidIds = items.filter((id) => !isSnowflake(id));
+
+    if (invalidIds.length > 0) {
+      warnings.push(
+        `Os seguintes valores não parecem IDs válidos de membros:\n${invalidIds
+          .map((id) => `• \`${id}\``)
+          .join('\n')}`
       );
     }
   }
@@ -347,7 +455,7 @@ export default createCommand({
     }
     // subcomando ver
     if (subcommand === 'ver') {
-      const guildConfig = await db.guilds.findOne({ id: guildId });
+      const guildConfig = await repos.guild.getById(guildId);
       const embed = createEmbed({
         title: `⚙️ Configurações do Servidor`,
         description: `Servidor: **${guild.name}**`,
@@ -373,6 +481,24 @@ export default createCommand({
               displayValue = channel ? `${channel}` : `\`${value}\` ❌`;
             } else if (meta.type === 'boolean') {
               displayValue = value === true ? '✅ Ativado' : '❌ Desativado';
+            } else if (meta.type === 'array') {
+              if (Array.isArray(value)) {
+                const mapped = value.map((v: string) => {
+                  const member = guild.members.cache.get(v);
+                  if (member) return `${member.user.tag}`;
+
+                  const role = guild.roles.cache.get(v);
+                  if (role) return `${role}`;
+
+                  const channel = guild.channels.cache.get(v);
+                  if (channel) return `${channel}`;
+
+                  return `\`${v}\``;
+                });
+                displayValue = mapped ? mapped.join(', ') : '`Vazio`';
+              } else {
+                displayValue = `\`${String(value)}\``;
+              }
             } else {
               displayValue = `\`${value}\``;
             }
@@ -433,7 +559,7 @@ export default createCommand({
       const { category, key, value } = parsed.data;
 
       // Checar se a categoria é válida no schema do banco
-      const guildSchema = await db.guilds.findOne({});
+      const guildSchema = await repos.guild.getById(guildId);
 
       if (!guildSchema || !(category in guildSchema)) {
         return interaction.reply({
@@ -479,17 +605,32 @@ export default createCommand({
       // Salvar no banco de dados
       try {
         const updatePath = `${category}.${key}`;
+        const metadata = configMetadata[category]?.[key];
 
-        await db.guilds.updateOne(
-          { id: guildId },
-          { $set: { [updatePath]: value } },
-          { upsert: true }
-        );
+        // Se for array, suportamos modos: set, add, remove
+        if (metadata?.type === 'array') {
+          const { mode, items } = parseArrayValue(value);
+
+          if (mode === 'set') {
+            await repos.guild.setArray(updatePath, guildId, items);
+          }
+
+          if (mode === 'add') {
+            await repos.guild.addToArray(updatePath, guildId, items);
+          }
+
+          if (mode === 'remove') {
+            await repos.guild.removeFromArray(updatePath, guildId, items);
+          }
+        } else {
+          await repos.guild.set(guildId, {
+            [updatePath]: value,
+          } as any);
+        }
 
         // Mensagem de sucesso com preview
         let successMessage = `${settings.emojis.static.success} Configurado: **${category}.${key}** → `;
 
-        const metadata = configMetadata[category]?.[key];
         if (metadata?.type === 'channel') {
           const channel = guild.channels.cache.get(value);
           successMessage += `${channel}`;

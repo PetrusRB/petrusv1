@@ -5,6 +5,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ChannelType,
   ChatInputCommandInteraction,
   GuildMember,
 } from 'discord.js';
@@ -18,9 +19,7 @@ import { t, getLocale } from 'i18n/index.js';
 import { LoadTypes, Player, StateTypes } from 'magmastream';
 import { createMusicButtons } from 'discord/responders/music/music.res.ts';
 
-// ─────────────────────────────────────────
 // Schema para validação
-// ─────────────────────────────────────────
 const schema = z.object({
   query: z
     .string()
@@ -89,9 +88,8 @@ export default createCommand({
       interaction.options.getString('platform', false) ||
       settings.default_platform;
 
-    // ─────────────────────────────────────────
     // Validar input
-    // ─────────────────────────────────────────
+
     const parsed = schema.safeParse({ query });
     if (!parsed.success) {
       return interaction.editReply({
@@ -111,9 +109,8 @@ export default createCommand({
       });
     }
 
-    // ─────────────────────────────────────────
     // Checar canal de voz e permissões
-    // ─────────────────────────────────────────
+
     const voiceChannel = member.voice.channel;
     if (!voiceChannel) {
       return interaction.editReply({
@@ -134,9 +131,8 @@ export default createCommand({
     }
 
     try {
-      // ─────────────────────────────────────────
       // Obter o manager com segurança
-      // ─────────────────────────────────────────
+
       const manager = client.music;
 
       if (!manager || !manager.nodes) {
@@ -146,9 +142,8 @@ export default createCommand({
         });
       }
 
-      // ─────────────────────────────────────────
       // Cria o player somente se não existe
-      // ─────────────────────────────────────────
+
       let player = manager.players?.get(guild.id) as Player | undefined;
 
       if (!player) {
@@ -166,9 +161,8 @@ export default createCommand({
         }
       }
 
-      // ─────────────────────────────────────────
       // Buscar música e valida se NÃO esta vazia
-      // ─────────────────────────────────────────
+
       let result = await manager.search(query, {
         requester: interaction.user,
         engine: platform,
@@ -186,16 +180,15 @@ export default createCommand({
             )
           );
       }
-      // ─────────────────────────────────────────
+
       // Conectar se estiver conectado
-      // ─────────────────────────────────────────
+
       if (player.state !== StateTypes.Connected) {
         await player.connect();
       }
 
-      // ─────────────────────────────────────────
       // Lidar com tipos de resultados
-      // ─────────────────────────────────────────
+
       switch (result.loadType) {
         case LoadTypes.Track:
         case LoadTypes.Search:

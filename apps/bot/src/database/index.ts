@@ -4,6 +4,7 @@ import { memberSchema } from './schemas/member.js';
 import { VerificationSessionSchema } from './schemas/verification.ts';
 import { logger } from '#settings';
 import chalk from 'chalk';
+import { GuildRepository } from './repositories/guild.repository.ts';
 
 export const db = {
   guilds: model('guild', guildSchema, 'guilds'),
@@ -13,6 +14,10 @@ export const db = {
     'verification_sessions'
   ),
   members: model('member', memberSchema, 'members'),
+};
+
+export const repos = {
+  guild: GuildRepository,
 };
 
 export async function initializeDatabase(): Promise<boolean> {

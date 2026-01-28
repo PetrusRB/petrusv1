@@ -1,7 +1,7 @@
 'use client';
 
-import { ReactNode } from 'react';
 import { withPrivate } from '@/hocs/withPrivate';
+import { ReactNode } from 'react';
 
 function PrivateLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;

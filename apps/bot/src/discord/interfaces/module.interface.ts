@@ -1,4 +1,4 @@
-import { Guild, GuildMember } from 'discord.js';
+import { Guild, GuildMember, Message } from 'discord.js';
 
 export type ModuleId = string;
 
@@ -13,6 +13,9 @@ export interface ModuleBase {
 
   /** ação executada quando o módulo precisa "disparar" para um membro */
   trigger: (guild: Guild, member: GuildMember) => Promise<void>;
+
+  /** ação executada quando o módulo precisa "disparar" para um membro */
+  handleMessage: (message: Message) => Promise<void>;
 
   /** desabilitar o módulo numa guild (limpeza, remover roles, etc) */
   disable: (guild: Guild) => Promise<void>;

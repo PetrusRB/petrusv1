@@ -5,8 +5,9 @@ import { cookies } from 'next/headers';
 import GlobalClientWrapper from '@/providers/GlobalClientWrapper';
 import { Footer } from '@/components/ui/footer';
 import { AuthProvider } from '@/context/auth.context';
+import { ClerkProvider } from '@clerk/nextjs';
 export const metadata = {
-  title: 'Petrus ',
+  title: 'Petrus - Um bot all-in-one para sua Comunidade',
   description: 'A discord bot.',
 };
 
@@ -21,13 +22,15 @@ export default async function RootLayout({
     <html suppressHydrationWarning lang="pt-BR" data-theme={theme}>
       <link rel="icon" href="/favicon.ico" sizes="any" />
       <body>
-        <AuthProvider>
-          <Header />
-          {/* Espaço para compensar a navbar fixa */}
-          <div className="h-[88px]" aria-hidden="true" />
-          <GlobalClientWrapper>{children}</GlobalClientWrapper>
-          <Footer />
-        </AuthProvider>
+        <ClerkProvider>
+          <AuthProvider>
+            <Header />
+            {/* Espaço para compensar a navbar fixa */}
+            <div className="h-[88px]" aria-hidden="true" />
+            <GlobalClientWrapper>{children}</GlobalClientWrapper>
+            <Footer />
+          </AuthProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

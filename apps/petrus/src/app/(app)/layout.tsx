@@ -1,5 +1,4 @@
 'use client';
-
 import { ReactNode } from 'react';
 
 function AppLayout({ children }: { children: ReactNode }) {

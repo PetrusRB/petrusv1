@@ -3,7 +3,6 @@
 import { ThemeProvider } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useRouteProgress } from '@/hooks/useRouteProgress';
-import { ClerkProvider } from '@clerk/nextjs';
 interface ProviderProps {
   children: React.ReactNode;
 }
@@ -15,11 +14,9 @@ export default function Provider({ children }: ProviderProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ClerkProvider>
-        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem>
-          {children}
-        </ThemeProvider>
-      </ClerkProvider>
+      <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem>
+        {children}
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

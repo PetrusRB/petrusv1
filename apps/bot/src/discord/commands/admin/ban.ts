@@ -41,15 +41,11 @@ export default createCommand({
 
     if (!botMe?.permissions.has(PermissionFlagsBits.BanMembers)) {
       interaction.editReply({
-        content: '❌ Sem permissão para banir usuários!',
+        content: '❌ Eu estou sem permissão para banir usuários!',
       });
       return;
     }
-    if (
-      !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator) &&
-      !interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers) &&
-      !interaction.memberPermissions?.has(PermissionFlagsBits.KickMembers)
-    ) {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
       interaction.editReply({
         content: `${settings.emojis.static.failed} Você não tem permissão para usar este comando.`,
       });

@@ -1,4 +1,3 @@
-// src/db/schema.ts
 import {
   pgTable,
   text,
@@ -9,6 +8,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { createId } from '@paralleldrive/cuid2';
+import { z } from 'zod';
 
 export const roleEnum = pgEnum('role', ['USER', 'ADMIN', 'MODERATOR']);
 export const usersTable = pgTable(
@@ -100,3 +100,26 @@ export const discordTokensRelations = relations(
     }),
   })
 );
+
+export const sessionsTable = pgTable('sessions', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at').notNull(),
+  userAgent: text('user_agent'),
+  ipAddress: text('ip_address'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// Tipagems
+export const SessionSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  expiresAt: z.date(),
+  userAgent: z.string().optional(),
+  ipAddress: z.string().ip().optional(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});

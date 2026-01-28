@@ -15,7 +15,9 @@ createResponder({
     if (interaction.isModalSubmit()) {
       await interaction.deferUpdate();
 
-      const fields = modalFieldsToRecord<'ip' | 'tipo'>(interaction.fields);
+      const fields = modalFieldsToRecord<{ ip: string; tipo: string }>(
+        interaction.fields
+      );
       const isBedrock =
         includesIgnoreCase(fields.tipo, 'bedrock') ||
         includesIgnoreCase(fields.tipo, 'Bedrock');
@@ -38,26 +40,27 @@ createResponder({
         return;
       }
       case 'search': {
+        const modal = createModalFields({
+          ip: {
+            label: 'IP do servidor',
+            placeholder: 'Ex: mc.hypixel.net',
+            required: true,
+            minLength: 3,
+          },
+          tipo: {
+            label: 'Tipo de servidor',
+            value: 'java',
+            placeholder: 'Ex: bedrock (em letras menusuculas)',
+            required: false,
+          },
+        });
+
         await interaction.showModal({
           customId: interaction.customId,
           title: 'Pesquisar servidor',
-          components: createModalFields({
-            ip: {
-              label: 'IP do servidor',
-              placeholder: 'Ex: mc.hypixel.net',
-              required: true,
-              minLength: 3,
-            },
-            tipo: {
-              label: 'Tipo de servidor',
-              value: 'java',
-              placeholder: 'Ex: bedrock (em letras menusuculas)',
-              required: false,
-            },
-          }),
+          components: modal,
         });
       }
     }
   },
 });
-
