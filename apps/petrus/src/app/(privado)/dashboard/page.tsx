@@ -1,6 +1,6 @@
 'use client';
 import { DiscordServer } from '@/components/ui/Server';
-import { DiscordServer as ServerUITypes } from '../types/server.ui.types';
+import { DiscordServer as ServerUITypes } from '@/types/server.ui.types';
 
 import { Hero } from '@/components/ui/hero';
 import { memo, motion } from 'motion/react';
@@ -55,8 +55,11 @@ const DashboardPage = memo(() => {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-1xl sm:text-6xl md:text-5xl font-extrabold mb-4 text-center"
           >
-            <span className="text-primary bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Servidores para configurar
+            </span>{' '}
+            <span className="text-zinc-400 text-1xl font-thin italic sm:text-2xl md:text-2xl block mt-2">
+              'Esta página ainda esta em desenvolvimento.'
             </span>{' '}
           </motion.h1>
           {/* Divider */}
